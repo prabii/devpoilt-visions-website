@@ -35,7 +35,7 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-20 md:py-32 relative">
+    <section id="contact" className="py-20 md:py-32 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-[10%] -right-[10%] w-[30%] h-[30%] bg-accent/20 rounded-full blur-[100px] dark:bg-accent/5" />
@@ -54,49 +54,49 @@ const ContactSection = () => {
             </p>
             
             <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="flex items-center gap-4 group hover:bg-background/50 p-3 rounded-xl transition-colors">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                   <Mail className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <h4 className="font-medium">Email</h4>
-                  <a href="mailto:contact@devpoilt.com" className="text-muted-foreground hover:text-primary">
+                  <a href="mailto:contact@devpoilt.com" className="text-muted-foreground hover:text-primary transition-colors">
                     contact@devpoilt.com
                   </a>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="flex items-center gap-4 group hover:bg-background/50 p-3 rounded-xl transition-colors">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                   <Phone className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <h4 className="font-medium">Phone</h4>
-                  <a href="tel:+15551234567" className="text-muted-foreground hover:text-primary">
-                    +1 (555) 123-4567
+                  <a href="tel:+916300737911" className="text-muted-foreground hover:text-primary transition-colors">
+                    +91 6300737911
                   </a>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="flex items-center gap-4 group hover:bg-background/50 p-3 rounded-xl transition-colors">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                   <MessageSquare className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <h4 className="font-medium">Live Chat</h4>
                   <span className="text-muted-foreground">
-                    Available Monday-Friday, 9AM-6PM EST
+                    Available Monday-Friday, 9AM-6PM IST
                   </span>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="glass-card p-6 md:p-8 animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <div className="glass-card p-6 md:p-8 animate-fade-in hover:shadow-xl transition-shadow duration-300 gradient-border" style={{ animationDelay: '200ms' }}>
             <h3 className="text-2xl font-bold mb-6">Send Us a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
+              <div className="group">
+                <label htmlFor="name" className="block text-sm font-medium mb-2 group-focus-within:text-primary transition-colors">
                   Name
                 </label>
                 <input
@@ -106,13 +106,13 @@ const ContactSection = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   placeholder="Your name"
                 />
               </div>
               
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
+              <div className="group">
+                <label htmlFor="email" className="block text-sm font-medium mb-2 group-focus-within:text-primary transition-colors">
                   Email
                 </label>
                 <input
@@ -122,13 +122,13 @@ const ContactSection = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   placeholder="your.email@example.com"
                 />
               </div>
               
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
+              <div className="group">
+                <label htmlFor="message" className="block text-sm font-medium mb-2 group-focus-within:text-primary transition-colors">
                   Message
                 </label>
                 <textarea
@@ -138,14 +138,14 @@ const ContactSection = () => {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
                   placeholder="Tell us about your project..."
                 />
               </div>
               
               <Button 
                 type="submit" 
-                className="w-full bg-primary hover:bg-primary/90 text-white py-3" 
+                className="w-full bg-primary hover:bg-primary/90 text-white py-3 transition-all hover:shadow-lg hover:shadow-primary/20" 
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'} 
