@@ -25,7 +25,7 @@ const ServiceCard = ({
   return (
     <Card 
       onClick={toggleExpand}
-      className={`relative group glass-card transition-all duration-500 animate-fade-in overflow-hidden cursor-pointer
+      className={`relative group neo-glass transition-all duration-500 animate-fade-in overflow-hidden cursor-pointer
         ${isExpanded ? 'h-[340px] md:h-[360px]' : 'h-[200px]'}
       `}
       style={{ animationDelay: delay }}
@@ -56,11 +56,11 @@ const ServiceCard = ({
         </div>
       </CardContent>
       
-      {/* Gradient border hover effect */}
+      {/* Enhanced glassmorphism effects */}
       <div className="absolute inset-0 border border-primary/0 rounded-xl transition-all duration-500 group-hover:border-primary/50" />
       
-      {/* Bottom glow effect */}
-      <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-3/4 h-6 bg-primary/30 rounded-full blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+      {/* Enhanced hover glow effect */}
+      <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-3/4 h-10 bg-primary/30 rounded-full blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
     </Card>
   );
 };
@@ -173,7 +173,7 @@ const ServicesSection = () => {
 
   return (
     <section id="services" className="py-20 md:py-32 relative overflow-hidden">
-      {/* Background Elements */}
+      {/* Enhanced Background Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[100px] dark:bg-accent/5" />
         <div className="absolute bottom-[20%] left-[10%] w-[30%] h-[30%] bg-primary/20 rounded-full blur-[100px] dark:bg-primary/5 animate-pulse-soft" />
@@ -190,7 +190,7 @@ const ServicesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
             <ServiceCard
               key={index}

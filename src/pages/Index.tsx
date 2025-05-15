@@ -8,6 +8,7 @@ import TeamSection from '@/components/TeamSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
+import { useMedia } from 'react-use';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,10 +19,13 @@ const Index = () => {
     email: "contact@devpoilt.com",
     address: "Tech Hub, Hyderabad, India"
   };
-
-  // Reference for the observer
+  
+  // Reference for the observer and 3D background
   const sectionsRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isMobile = useMedia('(max-width: 768px)', false);
 
+  // Loading animation
   useEffect(() => {
     // Simulate loading to ensure smooth animations
     const duration = 2000; // 2 seconds
@@ -44,6 +48,113 @@ const Index = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // 3D background animation effect
+  useEffect(() => {
+    if (!showContent || !canvasRef.current || isMobile) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set canvas to full screen
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Create particles
+    const particlesArray: Particle[] = [];
+    const particleCount = 50;
+    
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+      color: string;
+      
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 5 + 1;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+        this.color = `hsla(${Math.random() * 60 + 240}, 70%, 70%, ${Math.random() * 0.2 + 0.1})`;
+      }
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        
+        // Bounce off edges
+        if (this.x > canvas.width || this.x < 0) {
+          this.speedX = -this.speedX;
+        }
+        if (this.y > canvas.height || this.y < 0) {
+          this.speedY = -this.speedY;
+        }
+      }
+      
+      draw() {
+        if (!ctx) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+    
+    const init = () => {
+      for (let i = 0; i < particleCount; i++) {
+        particlesArray.push(new Particle());
+      }
+    };
+    
+    const connectParticles = () => {
+      if (!ctx) return;
+      for (let a = 0; a < particlesArray.length; a++) {
+        for (let b = a; b < particlesArray.length; b++) {
+          const dx = particlesArray[a].x - particlesArray[b].x;
+          const dy = particlesArray[a].y - particlesArray[b].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(123, 97, 255, ${0.2 - (distance/150) * 0.2})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    };
+    
+    const animate = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+      }
+      
+      connectParticles();
+      requestAnimationFrame(animate);
+    };
+    
+    init();
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, [showContent, isMobile]);
 
   // Setup intersection observer for scroll animations
   useEffect(() => {
@@ -118,6 +229,14 @@ const Index = () => {
       className={`min-h-screen relative transition-opacity duration-700 ${showContent ? 'opacity-100' : 'opacity-0'}`}
       ref={sectionsRef}
     >
+      {/* 3D Background Canvas */}
+      {!isMobile && (
+        <canvas 
+          ref={canvasRef} 
+          className="fixed inset-0 -z-30 opacity-60"
+        />
+      )}
+      
       {/* Global site background decoration */}
       <div className="fixed inset-0 -z-20 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent dark:from-primary/10"></div>

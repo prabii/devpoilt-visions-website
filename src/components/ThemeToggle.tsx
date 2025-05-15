@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Stars } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const ThemeToggle = () => {
@@ -42,7 +42,7 @@ const ThemeToggle = () => {
       size="icon" 
       onClick={toggleTheme}
       disabled={isAnimating}
-      className="relative rounded-full w-11 h-11 bg-gradient-to-br from-background/80 to-background/40 backdrop-blur-lg border border-border hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 overflow-hidden"
+      className="relative rounded-full w-11 h-11 glass hover:glow transition-all duration-300 overflow-hidden"
     >
       {/* Stars background for dark mode */}
       <div 
@@ -64,7 +64,7 @@ const ThemeToggle = () => {
               : 'opacity-0 rotate-90 scale-50'
           }`}
         >
-          <Moon className="h-5 w-5 text-slate-700" />
+          <Moon className="h-5 w-5 text-slate-100" />
         </span>
         <span 
           className={`absolute inset-0 transition-all duration-500 flex items-center justify-center ${
