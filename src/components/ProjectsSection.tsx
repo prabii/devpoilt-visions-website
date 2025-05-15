@@ -1,8 +1,22 @@
-
-import { useState, useRef, useEffect } from 'react';
-import { ArrowRight, ExternalLink, Star } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { ArrowRight, ExternalLink, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+
+// Define CSS Keyframes for Glowing Effect
+const styles = `
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5), 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.7), 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5), 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+}
+`;
 
 type Project = {
   id: number;
@@ -37,7 +51,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
 
   return (
     <div 
-      className={`group relative ${project.featured ? 'col-span-2 row-span-2' : ''}`}
+      className={`group relative ${project.featured ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1'}`}
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
@@ -47,7 +61,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
       }}
     >
       <Card 
-        className="animate-fade-in overflow-hidden h-full transform transition-all duration-500 group-hover:shadow-2xl"
+        className="animate-fade-in overflow-hidden h-full transform transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105"
         style={{ 
           animationDelay: `${project.id * 100}ms`,
           transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
@@ -64,32 +78,38 @@ const ProjectCard = ({ project }: { project: Project }) => {
             }} 
           />
           
-          {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
+          {/* Overlay gradient - removed on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-0 pointer-events-none" />
           
           {/* Content */}
-          <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
+          <div className="relative z-10 p-6 sm:p-8 flex flex-col justify-end h-full bg-black/20 group-hover:bg-black/0 transition-all duration-300">
             {project.featured && (
-              <div className="absolute top-6 right-6 flex items-center gap-1 text-yellow-400">
+              <div className="absolute top-6 right-6 flex items-center gap-1 text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <Star className="w-4 h-4 fill-yellow-400" />
                 <span className="text-xs font-medium">Featured Project</span>
               </div>
             )}
             
-            <span className="text-sm text-primary-foreground bg-primary/90 px-3 py-1 rounded-full w-fit mb-4 backdrop-blur-sm">
+            {/* Done by Us Badge */}
+            <div className="absolute top-6 left-6 flex items-center gap-1 text-green-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <CheckCircle className="w-4 h-4" />
+              <span className="text-xs font-medium">Done by Us</span>
+            </div>
+            
+            <span className="text-sm text-primary-foreground bg-primary/90 px-3 py-1 rounded-full w-fit mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.category}
             </span>
             
-            <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary-foreground transition-colors">
+            <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary-foreground transition-colors opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.title}
             </h3>
             
-            <p className="text-gray-300 mb-5 max-w-md opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+            <p className="text-gray-300 mb-5 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.description}
             </p>
             
             {/* Tech stack */}
-            <div className="flex flex-wrap gap-2 mb-5 opacity-0 translate-y-4 transition-all duration-500 delay-100 group-hover:opacity-100 group-hover:translate-y-0">
+            <div className="flex flex-wrap gap-2 mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.techStack.map((tech, index) => (
                 <span key={index} className="text-xs bg-white/10 backdrop-blur-md px-2 py-1 rounded-md text-white/80">
                   {tech}
@@ -99,7 +119,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
             
             <a 
               href={project.link}
-              className="flex items-center gap-2 text-white font-semibold transition-all duration-300 hover:text-primary group/link"
+              className="z-20 flex items-center gap-2 text-white font-semibold transition-all duration-300 group/link opacity-0 group-hover:opacity-100 bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 rounded-full hover:from-blue-600 hover:to-indigo-700 animate-glow"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -107,9 +127,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
               <ExternalLink className="w-4 h-4 transform transition-transform group-hover/link:translate-x-1" />
             </a>
           </div>
-          
-          {/* Glass effect at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent backdrop-blur-[2px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         </div>
       </Card>
     </div>
@@ -125,7 +142,7 @@ const ProjectsSection = () => {
       featured: true,
       description: "A sophisticated analytics platform with AI-powered insights for Fortune 500 company, processing over 10 million data points daily.",
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80",
-      link: "#",
+      link: "https://www.tableau.com/solutions/ai-analytics",
       techStack: ["React", "TensorFlow.js", "AWS", "D3.js"]
     },
     {
@@ -134,7 +151,7 @@ const ProjectsSection = () => {
       category: "Full Stack Development",
       description: "A lightning-fast e-commerce solution with personalized recommendations and seamless payment processing.",
       image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80",
-      link: "#",
+      link: "https://www.bigcommerce.com/",
       techStack: ["Next.js", "MongoDB", "Stripe", "Redux"]
     },
     {
@@ -143,7 +160,7 @@ const ProjectsSection = () => {
       category: "Distributed Systems",
       description: "Secure, transparent asset management system built on blockchain with real-time transaction verification.",
       image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80",
-      link: "#",
+      link: "https://www.chainalysis.com/solutions/asset-management/",
       techStack: ["Solidity", "Ethereum", "Web3.js", "React"]
     },
     {
@@ -152,7 +169,7 @@ const ProjectsSection = () => {
       category: "UI/UX Design",
       description: "Award-winning interactive website for a luxury brand, resulting in 300% increase in user engagement.",
       image: "https://images.unsplash.com/photo-1545239351-ef35f43d514b?auto=format&fit=crop&q=80",
-      link: "#",
+      link: "https://www.burberry.com/",
       techStack: ["Three.js", "GSAP", "React", "Tailwind CSS"]
     },
     {
@@ -161,13 +178,41 @@ const ProjectsSection = () => {
       category: "Enterprise Architecture",
       description: "Highly available microservices architecture enabling seamless scaling for a global SaaS platform.",
       image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80",
-      link: "#",
+      link: "https://www.redhat.com/en/topics/microservices",
       techStack: ["Kubernetes", "Docker", "Node.js", "MongoDB"]
+    },
+    {
+      id: 6,
+      title: "EdTech Learning Platform",
+      category: "Education Technology",
+      description: "An interactive learning platform with gamified courses, supporting over 50,000 students globally.",
+      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
+      link: "https://www.khanacademy.org/",
+      techStack: ["React", "Firebase", "TypeScript", "GraphQL"]
+    },
+    {
+      id: 7,
+      title: "Real-Time Chat Application",
+      category: "Communication Tool",
+      description: "A scalable chat app with real-time messaging, supporting group chats and multimedia sharing.",
+      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80",
+      link: "https://slack.com/",
+      techStack: ["React", "Socket.io", "Node.js", "MongoDB"]
+    },
+    {
+      id: 8,
+      title: "Fitness Tracking App",
+      category: "Mobile Development",
+      description: "A mobile app for tracking workouts, nutrition, and goals with real-time analytics and social sharing.",
+      image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80",
+      link: "https://www.myfitnesspal.com/",
+      techStack: ["React Native", "Firebase", "Node.js", "Express"]
     }
   ];
 
   return (
     <section id="projects" className="py-20 md:py-32 relative bg-muted/30 dark:bg-muted/10">
+      <style>{styles}</style>
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-[20%] -left-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[100px]" />
@@ -175,7 +220,7 @@ const ProjectsSection = () => {
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
           <div>
             <h2 className="inline-block text-sm font-semibold tracking-wider text-primary uppercase mb-4 animate-fade-in">Our Portfolio</h2>
             <h3 className="text-3xl md:text-5xl font-bold mb-6 md:mb-0 animate-fade-in" style={{ animationDelay: '100ms' }}>
@@ -192,7 +237,7 @@ const ProjectsSection = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] lg:auto-rows-[300px]">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}

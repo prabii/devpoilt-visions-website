@@ -7,7 +7,6 @@ type TeamMember = {
   id: number;
   name: string;
   role: string;
-  position: string;
   bio: string;
   image: string;
   social: {
@@ -37,11 +36,7 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
           <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-3/4 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full blur-sm"></div>
         </div>
         
-        {member.position && (
-          <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full mb-2 backdrop-blur-sm">
-            {member.position}
-          </span>
-        )}
+        {}
         
         <h3 className="text-xl font-bold mb-1">{member.name}</h3>
         <p className="text-primary font-medium mb-3">{member.role}</p>
@@ -89,9 +84,8 @@ const TeamSection = () => {
     {
       id: 0,
       name: "Satya Malleti",
-      position: "CEO & Founder",
-      role: "Cloud & Backend Specialist",
-      bio: "Visionary leader with 10+ years experience building scalable cloud architecture that transforms business operations.",
+      role: "UI UX Designer and Frontend developer ",
+      bio: "Visionary leader with 4+ years experience building scalable cloud architecture that transforms business operations.",
       image: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortFlat&accessoriesType=Prescription02&hairColor=Black&facialHairType=BeardLight&facialHairColor=Black&clotheType=BlazerSweater&eyeType=Default&eyebrowType=Default&mouthType=Smile&skinColor=Light",
       social: {
         linkedin: "#",
@@ -101,8 +95,7 @@ const TeamSection = () => {
     {
       id: 1,
       name: "Bhargav Yaswanth",
-      position: "Co-founder",
-      role: "Full Stack & UI Developer",
+      role: "Full Stack & Andriod Developer",
       bio: "Design-focused developer creating intuitive interfaces with pixel-perfect precision and unmatched user experiences.",
       image: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=Blue03&eyeType=Happy&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Light",
       social: {
@@ -114,8 +107,7 @@ const TeamSection = () => {
     {
       id: 2,
       name: "Prabhas Satti",
-      position: "Co-founder",
-      role: "Full Stack & Blockchain Architect",
+      role: "Full Stack & AI developer",
       bio: "Revolutionary technologist integrating decentralized solutions for enterprises with a focus on security and innovation.",
       image: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortRound&accessoriesType=Round&hairColor=BrownDark&facialHairType=BeardMedium&facialHairColor=Brown&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Diamond&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Twinkle&skinColor=Light",
       social: {
@@ -127,7 +119,6 @@ const TeamSection = () => {
     {
       id: 3,
       name: "Sharan Medamoni",
-      position: "Co-founder",
       role: "AI/ML & Frontend Engineer",
       bio: "AI enthusiast merging data science with beautiful user experiences to create intelligent, self-learning applications.",
       image: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairTheCaesar&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light",

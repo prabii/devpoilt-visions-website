@@ -1,7 +1,33 @@
-
-import { useState } from 'react';
 import { Code, Cloud, Database, Layout, Zap, Server, Rocket, Star } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+
+// Define CSS Keyframes for Anim defining animations consistent with the theme
+const styles = `
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+`;
 
 interface ServiceCardProps { 
   icon: React.ElementType; 
@@ -9,24 +35,19 @@ interface ServiceCardProps {
   description: string;
   features: string[];
   delay: string;
-  isExpanded: boolean;
-  toggleExpand: () => void;
 }
 
 const ServiceCard = ({ 
   icon: Icon, 
   title, 
   description,
-  features,
   delay,
-  isExpanded,
-  toggleExpand
 }: ServiceCardProps) => {
   return (
     <Card 
-      onClick={toggleExpand}
-      className={`relative group neo-glass transition-all duration-500 animate-fade-in overflow-hidden cursor-pointer
-        ${isExpanded ? 'h-[340px] md:h-[360px]' : 'h-[200px]'}
+      className={`relative group neo-glass transition-all duration-500 animate-fade-in overflow-hidden
+        bg-white/10 dark:bg-gray-900/10 backdrop-blur-md shadow-lg
+        h-[300px] md:h-[320px] // Fixed height to accommodate all content
       `}
       style={{ animationDelay: delay }}
     >
@@ -35,25 +56,12 @@ const ServiceCard = ({
           <Icon className="w-6 h-6 text-primary" />
         </div>
         <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{title}</h3>
-        <p className="text-muted-foreground mb-4">{description}</p>
+        <p className="text-muted-foreground mb-4 text-sm">{description}</p>
         
-        <div className={`transition-opacity duration-500 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent my-4"></div>
-          <h4 className="text-sm font-medium mb-2">Key Features:</h4>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            {features.map((feature, idx) => (
-              <li key={idx} className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary/70"></div>
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        <div className="absolute bottom-4 right-4 w-6 h-6 flex items-center justify-center rounded-full bg-muted/50 group-hover:bg-primary/10 transition-colors">
-          <div className={`w-4 h-0.5 bg-current transition-transform duration-300 ${isExpanded ? 'rotate-0' : 'rotate-90'}`}></div>
-          <div className="w-0.5 h-4 bg-current absolute"></div>
-        </div>
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-4"></div>
+        <ul className="text-sm text-muted-foreground space-y-1">
+          {}
+        </ul>
       </CardContent>
       
       {/* Enhanced glassmorphism effects */}
@@ -66,107 +74,53 @@ const ServiceCard = ({
 };
 
 const ServicesSection = () => {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
-  const toggleExpand = (index: number) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
-  };
-
   const services = [
     {
       icon: Layout,
       title: "Premium Landing Pages",
       description: "Stunning, conversion-optimized landing pages built with cutting-edge design principles.",
-      features: [
-        "Responsive & mobile-first design",
-        "SEO optimization built-in",
-        "60+ fps smooth animations",
-        "A/B testing ready"
-      ],
       delay: "0ms"
     },
     {
       icon: Rocket,
       title: "Enterprise AI Solutions",
       description: "Leverage powerful AI/ML models to transform your business operations and analytics.",
-      features: [
-        "Custom ML model training",
-        "Predictive analytics dashboards",
-        "Natural language processing",
-        "Computer vision integration"
-      ],
       delay: "100ms"
     },
     {
       icon: Cloud,
       title: "Cloud-Native Applications",
       description: "Scalable cloud architecture that grows with your business needs and traffic demands.",
-      features: [
-        "Auto-scaling infrastructure",
-        "99.99% uptime guarantee",
-        "Global CDN distribution",
-        "Real-time monitoring"
-      ],
       delay: "200ms"
     },
     {
       icon: Code,
       title: "MERN Stack Development",
       description: "Full-stack solutions using MongoDB, Express, React, and Node.js for optimal performance.",
-      features: [
-        "Server-side rendering",
-        "GraphQL API integration",
-        "State-of-the-art security",
-        "Blazing fast performance"
-      ],
       delay: "300ms"
     },
     {
       icon: Database,
       title: "Blockchain Integration",
       description: "Secure, transparent blockchain solutions for next-generation applications and services.",
-      features: [
-        "Smart contract development",
-        "DeFi application architecture",
-        "NFT marketplace creation",
-        "Crypto payment gateways"
-      ],
       delay: "400ms"
     },
     {
       icon: Server,
       title: "DevOps Excellence",
       description: "Streamlined CI/CD pipelines and infrastructure automation for rapid development cycles.",
-      features: [
-        "Containerized deployments",
-        "Infrastructure as code",
-        "Zero-downtime releases",
-        "Comprehensive monitoring"
-      ],
       delay: "500ms"
     },
     {
       icon: Star,
       title: "UI/UX Mastery",
       description: "User-centered design that delights customers and drives engagement metrics through the roof.",
-      features: [
-        "User research & testing",
-        "Interactive prototyping",
-        "Accessibility compliance",
-        "Motion design & micro-interactions"
-      ],
       delay: "600ms"
     },
     {
       icon: Zap,
       title: "Performance Optimization",
       description: "Speed up your existing applications with our expert performance tuning and optimization.",
-      features: [
-        "Core Web Vitals improvement",
-        "Database query optimization",
-        "Asset delivery optimization",
-        "Caching strategies"
-      ],
       delay: "700ms"
     }
   ];
@@ -197,10 +151,7 @@ const ServicesSection = () => {
               icon={service.icon}
               title={service.title}
               description={service.description}
-              features={service.features}
               delay={service.delay}
-              isExpanded={expandedIndex === index}
-              toggleExpand={() => toggleExpand(index)}
             />
           ))}
         </div>
