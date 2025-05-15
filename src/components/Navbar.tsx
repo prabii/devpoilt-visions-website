@@ -4,89 +4,123 @@ import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
 
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+interface NavbarProps {
+  contactInfo: {
+    phone: string;
+    email: string;
+    address: string;
+  };
+}
+
+const Navbar = ({ contactInfo }: NavbarProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      const offset = window.scrollY;
+      setScrolled(offset > 20);
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Services', href: '#services' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Team', href: '#team' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
   return (
-    <nav 
+    <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'py-3 bg-background/80 backdrop-blur-md border-b border-border' 
+        scrolled 
+          ? 'py-3 bg-background/80 backdrop-blur-lg border-b border-border/50 shadow-sm' 
           : 'py-5'
       }`}
     >
-      <div className="container max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <a href="#" className="flex items-center gap-2">
-          <div className="font-bold text-2xl gradient-text">Devpoilt</div>
+      <nav className="container mx-auto px-4 flex justify-between items-center">
+        {/* Logo */}
+        <a 
+          href="#" 
+          className="text-2xl font-bold flex items-center"
+        >
+          <span className="gradient-text-premium">Devpoilt</span>
         </a>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
-          <div className="flex gap-6">
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href}
-                className="font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
-          <ThemeToggle />
-          <Button className="bg-primary text-white hover:bg-primary/90">Get Started</Button>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-1">
+          {['Home', 'Services', 'Projects', 'Team', 'Contact'].map((item) => (
+            <a 
+              key={item} 
+              href={`#${item.toLowerCase()}`}
+              className="px-3 py-2 text-foreground/80 hover:text-primary transition-colors duration-200 fancy-underline"
+            >
+              {item}
+            </a>
+          ))}
         </div>
 
-        {/* Mobile Navigation Toggle */}
-        <div className="flex items-center gap-4 md:hidden">
+        {/* Call to Action + Theme Toggle */}
+        <div className="hidden md:flex items-center space-x-3">
           <ThemeToggle />
+          
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="rounded-full"
+          >
+            {contactInfo.phone}
+          </Button>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="flex md:hidden items-center space-x-3">
+          <ThemeToggle />
+          
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="rounded-full"
+            onClick={toggleMenu}
+            className="relative z-50"
           >
-            {isMobileMenuOpen ? <X /> : <Menu />}
+            {isOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+            <span className="sr-only">Toggle menu</span>
           </Button>
         </div>
-      </div>
 
-      {/* Mobile Navigation Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border animate-fade-in">
-          <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href}
-                className="font-medium text-foreground py-2 hover:text-primary transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
-            <Button className="bg-primary text-white hover:bg-primary/90 mt-2">Get Started</Button>
+        {/* Mobile Menu */}
+        <div 
+          className={`fixed inset-0 bg-background/95 backdrop-blur-lg z-40 flex flex-col items-center justify-center space-y-8 transition-all duration-300 ${
+            isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          }`}
+        >
+          {['Home', 'Services', 'Projects', 'Team', 'Contact'].map((item) => (
+            <a 
+              key={item} 
+              href={`#${item.toLowerCase()}`}
+              className="text-2xl font-medium hover:text-primary transition-colors duration-200"
+              onClick={toggleMenu}
+            >
+              {item}
+            </a>
+          ))}
+          
+          <div className="pt-8 flex flex-col items-center space-y-4">
+            <Button 
+              variant="default" 
+              size="lg" 
+              className="rounded-full w-full sm:w-auto"
+            >
+              {contactInfo.phone}
+            </Button>
           </div>
         </div>
-      )}
-    </nav>
+      </nav>
+    </header>
   );
 };
 

@@ -64,8 +64,7 @@ const ThemeToggle = () => {
               : 'opacity-0 rotate-90 scale-50'
           }`}
         >
-          <Sun className="h-5 w-5 text-yellow-400" />
-          <div className="absolute inset-0 bg-yellow-400/20 rounded-full animate-pulse-soft blur-sm" style={{ animationDuration: '2s' }} />
+          <Moon className="h-5 w-5 text-slate-700" />
         </span>
         <span 
           className={`absolute inset-0 transition-all duration-500 flex items-center justify-center ${
@@ -74,7 +73,8 @@ const ThemeToggle = () => {
               : 'opacity-0 -rotate-90 scale-50'
           }`}
         >
-          <Moon className="h-5 w-5 text-slate-700" />
+          <Sun className="h-5 w-5 text-yellow-400" />
+          <div className="absolute inset-0 bg-yellow-400/20 rounded-full animate-pulse-soft blur-sm" style={{ animationDuration: '2s' }} />
         </span>
       </div>
       
