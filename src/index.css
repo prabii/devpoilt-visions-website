@@ -87,30 +87,71 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border selection:bg-primary/20 selection:text-primary dark:selection:bg-primary/30;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+    overflow-x: hidden;
   }
 
   html {
     @apply scroll-smooth;
   }
+
+  /* Improved scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full hover:bg-primary/50 transition-colors;
+  }
 }
 
 @layer components {
+  /* Glass effects */
   .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl dark:bg-black/10;
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl dark:bg-black/10 shadow-lg;
   }
 
   .glass-card {
     @apply bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl dark:bg-black/40 dark:border-white/10;
   }
 
+  .neo-glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-2xl dark:bg-black/40 dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+  }
+
+  .premium-card {
+    @apply relative overflow-hidden rounded-2xl border border-white/20 dark:border-white/10;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  }
+
+  .premium-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent;
+  }
+
+  .premium-card::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent;
+  }
+
+  /* Text effects */
   .gradient-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500 dark:from-purple-400 dark:to-indigo-300 animate-gradient-shift;
+  }
+
+  .gradient-text-premium {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-primary via-purple-500 to-indigo-500 dark:from-primary dark:via-purple-400 dark:to-indigo-400 animate-gradient-shift;
   }
 
   .gradient-border {
@@ -120,4 +161,165 @@
   .shimmer {
     @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-shimmer-gradient;
   }
+  
+  /* Floating animation */
+  .floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+  
+  @keyframes floating {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  /* 3D Tilt Effect */
+  .tilt-card {
+    @apply transition-all duration-300 transform perspective-1000;
+  }
+  
+  .tilt-card:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+    @apply shadow-xl;
+  }
+  
+  /* Smooth reveal on scroll */
+  .reveal-on-scroll {
+    @apply opacity-0 translate-y-10 transition-all duration-700;
+  }
+  
+  .reveal-on-scroll.revealed {
+    @apply opacity-100 translate-y-0;
+  }
+  
+  /* Highlight text */
+  .highlight-text {
+    @apply relative inline-block;
+  }
+  
+  .highlight-text::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-[30%] bg-primary/20 -z-10 rounded;
+  }
+  
+  /* Fancy underline */
+  .fancy-underline {
+    @apply relative inline-block;
+  }
+  
+  .fancy-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all duration-300;
+  }
+  
+  .fancy-underline:hover::after {
+    @apply w-full;
+  }
+}
+
+/* Custom animations */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-flow {
+  background-size: 300% 300%;
+  animation: gradientFlow 8s ease infinite;
+}
+
+/* Text reveal animation */
+.reveal-text {
+  position: relative;
+  color: transparent;
+}
+
+.reveal-text::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--color-text);
+  overflow: hidden;
+  border-right: 3px solid var(--color-text);
+  animation: typing 3s steps(40) 1s forwards;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+    border-right: 0;
+  }
+}
+
+/* Glow effect */
+.glow {
+  box-shadow: 0 0 15px rgba(123, 97, 255, 0.2), 0 0 30px rgba(123, 97, 255, 0.1);
+}
+
+.glow:hover {
+  box-shadow: 0 0 20px rgba(123, 97, 255, 0.4), 0 0 40px rgba(123, 97, 255, 0.2);
+}
+
+/* Progressive image loading effect */
+.progressive-img {
+  filter: blur(15px);
+  transition: filter 0.3s ease-out;
+}
+
+.progressive-img.loaded {
+  filter: blur(0);
+}
+
+/* Marquee animation */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* For parallax scrolling */
+.parallax {
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
 }
