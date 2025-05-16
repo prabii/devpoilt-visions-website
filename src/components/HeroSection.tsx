@@ -1,9 +1,11 @@
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ThreeBackground from './ThreeBackground';
 
 const HeroSection = () => {
   return (
     <section id="hero" className="relative pt-28 pb-20 md:pt-36 md:pb-32 overflow-hidden">
+       <ThreeBackground density={100} speed={0.002} />
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10" />
