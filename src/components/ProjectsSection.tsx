@@ -90,10 +90,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
             )}
             
             {/* Done by Us Badge */}
-            <div className="absolute top-6 left-6 flex items-center gap-1 text-green-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <CheckCircle className="w-4 h-4" />
-              <span className="text-xs font-medium">Done by Us</span>
-            </div>
+
             
             <span className="text-sm text-primary-foreground bg-primary/90 px-3 py-1 rounded-full w-fit mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.category}
