@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -43,7 +42,7 @@ const ThreeText = ({
     
     // Add directional light
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 1, 1);
+    directionalLight.position.set(1, sucker1, 1);
     scene.add(directionalLight);
 
     // Create 3D text
@@ -68,7 +67,9 @@ const ThreeText = ({
       const textMaterial = new THREE.MeshPhongMaterial({ 
         color: color,
         specular: 0x111111,
-        shininess: 30
+        shininess: 30,
+        transparent: true,
+        opacity: 0.7 // Slightly reduced opacity for background effect
       });
       
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
@@ -76,13 +77,14 @@ const ThreeText = ({
       textMesh.rotation.set(rotation[0], rotation[1], rotation[2]);
       scene.add(textMesh);
       
-      // Position camera
-      camera.position.z = 5;
+      // Adjust camera position based on text size and screen size
+      const cameraZ = Math.max(5, size * 5);
+      camera.position.z = cameraZ;
 
       // Animation loop
       const animate = () => {
         requestAnimationFrame(animate);
-        textMesh.rotation.y += 0.01;
+        textMesh.rotation.y += 0.005; // Slower rotation for subtle effect
         renderer.render(scene, camera);
       };
       
@@ -93,8 +95,9 @@ const ThreeText = ({
     const handleResize = () => {
       if (!containerRef.current) return;
       const width = containerRef.current.clientWidth;
-      renderer.setSize(width, containerHeight);
-      camera.aspect = width / containerHeight;
+      const height = containerHeight;
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
     };
     
@@ -106,6 +109,7 @@ const ThreeText = ({
         containerRef.current.removeChild(renderer.domElement);
       }
       window.removeEventListener('resize', handleResize);
+      renderer.dispose();
     };
   }, [text, size, height, color, containerHeight, position, rotation]);
 
