@@ -1,7 +1,6 @@
 
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ThreeLaptop from './ThreeLaptop';
 
 const HeroSection = () => {
   return (
@@ -32,13 +31,8 @@ const HeroSection = () => {
             From intelligent solutions to stunning visuals — we build, you grow.
           </p>
           
-          {/* 3D Laptop */}
-          <div className="w-full max-w-2xl mx-auto mb-12 animate-fade-in" style={{ animationDelay: '300ms' }}>
-            <ThreeLaptop containerHeight={300} />
-          </div>
-          
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: '400ms' }}>
+          <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: '300ms' }}>
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-6">
               Get a Free Quote <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
