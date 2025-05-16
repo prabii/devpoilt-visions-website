@@ -42,7 +42,7 @@ const ThreeText = ({
     
     // Add directional light
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, sucker1, 1);
+    directionalLight.position.set(1, 1, 1); // Fixed typo: replaced 'sucker1' with 1
     scene.add(directionalLight);
 
     // Create 3D text
