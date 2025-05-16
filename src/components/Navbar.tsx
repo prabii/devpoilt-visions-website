@@ -44,7 +44,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
           href="#" 
           className="text-2xl font-bold flex items-center"
         >
-          <span className="gradient-text-premium">Devpoilt</span>
+          <span className="gradient-text-premium">Devpilot</span>
         </a>
 
         {/* Desktop Menu */}

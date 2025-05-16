@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, MessageSquare, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ThreeBackground from './ThreeBackground';
 
 type Testimonial = {
   id: number;
@@ -47,6 +48,23 @@ const TestimonialsSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const testimonialRef = useRef<HTMLDivElement>(null);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!testimonialRef.current) return;
+    const rect = testimonialRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * 5;
+    const rotateX = ((centerY - e.clientY) / (rect.height / 2)) * 5;
+    
+    setRotation({ x: rotateX, y: rotateY });
+  };
+
+  const resetRotation = () => {
+    setRotation({ x: 0, y: 0 });
+  };
 
   const nextTestimonial = () => {
     if (isAnimating) return;
@@ -75,13 +93,8 @@ const TestimonialsSection = () => {
 
   return (
     <section className="py-20 md:py-32 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-muted/30 to-transparent dark:from-muted/10" />
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-muted/30 to-transparent dark:from-muted/10" />
-        <div className="absolute top-1/3 left-[20%] w-[30%] h-[40%] bg-primary/10 rounded-full blur-[130px] animate-pulse-soft" />
-        <div className="absolute bottom-1/3 right-[20%] w-[35%] h-[30%] bg-accent/10 rounded-full blur-[150px] animate-pulse-soft" style={{ animationDelay: '1s' }} />
-      </div>
+      {/* 3D Background */}
+      <ThreeBackground density={60} color="#8B5CF6" secondaryColor="#EC4899" className="opacity-50" />
 
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-16">
@@ -98,6 +111,15 @@ const TestimonialsSection = () => {
           <div 
             ref={testimonialRef}
             className={`glass-card relative overflow-hidden p-8 md:p-14 transition-all duration-300 ${isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+            style={{ 
+              transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
+            }}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => {
+              setIsHovered(false);
+              resetRotation();
+            }}
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
             <div className="absolute top-10 left-10 opacity-20 transform -rotate-12">
