@@ -1,7 +1,7 @@
 
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ThreeLaptop from './ThreeLaptop';
+import Text3DBackground from './three/Text3DBackground';
 
 const HeroSection = () => {
   return (
@@ -21,21 +21,28 @@ const HeroSection = () => {
             <span className="text-sm font-medium">Building the future of digital experiences</span>
           </div>
           
-          {/* Main Headline */}
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight max-w-4xl mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            Building the Future of Web with 
-            <span className="gradient-text"> AI, Cloud & MERN</span>.
-          </h1>
+          {/* Main Headline with 3D Background */}
+          <div className="relative">
+            {/* 3D Background Effect behind the text */}
+            <Text3DBackground 
+              containerHeight={300}
+              text="Devpoilt"
+              color="#7c3aed"
+              secondaryColor="#3b82f6"
+              className="absolute inset-0"
+            />
+            
+            {/* Text overlay with transparent background */}
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight max-w-4xl mb-6 animate-fade-in relative z-10" style={{ animationDelay: '100ms' }}>
+              Building the Future of Web with 
+              <span className="gradient-text"> AI, Cloud & MERN</span>.
+            </h1>
+          </div>
           
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mb-10 animate-fade-in" style={{ animationDelay: '200ms' }}>
             From intelligent solutions to stunning visuals — we build, you grow.
           </p>
-          
-          {/* 3D Laptop */}
-          <div className="w-full max-w-2xl mx-auto mb-12 animate-fade-in" style={{ animationDelay: '300ms' }}>
-            <ThreeLaptop containerHeight={300} />
-          </div>
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: '400ms' }}>
