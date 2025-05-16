@@ -2,6 +2,9 @@
 import { Github, Linkedin, Instagram } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useRef, useEffect, useState } from 'react';
+import * as THREE from 'three';
+import ThreeBackground from './ThreeBackground';
 
 type TeamMember = {
   id: number;
@@ -17,12 +20,43 @@ type TeamMember = {
 };
 
 const TeamMemberCard = ({ member }: { member: TeamMember }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * 10;
+    const rotateX = ((centerY - e.clientY) / (rect.height / 2)) * 10;
+    
+    setRotation({ x: rotateX, y: rotateY });
+  };
+
+  const resetRotation = () => {
+    setRotation({ x: 0, y: 0 });
+  };
+  
   return (
     <div 
+      ref={cardRef}
       className="group relative overflow-hidden rounded-2xl animate-fade-in" 
       style={{ animationDelay: `${member.id * 100}ms` }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        resetRotation();
+      }}
     >
-      <div className="glass-card p-8 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-xl">
+      <div 
+        className="glass-card p-8 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-xl"
+        style={{ 
+          transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
+        }}
+      >
         <div className="relative mb-8 mx-auto w-36 h-36">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/10 rounded-full animate-pulse-soft"></div>
           <Avatar className="w-full h-full border-2 border-primary/20 p-1">
@@ -36,11 +70,9 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
           <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-3/4 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full blur-sm"></div>
         </div>
         
-        {}
-        
-        <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-        <p className="text-primary font-medium mb-3">{member.role}</p>
-        <p className="text-muted-foreground text-sm mb-6">{member.bio}</p>
+        <h3 className="text-xl font-bold mb-1 transition-transform group-hover:translate-z-10">{member.name}</h3>
+        <p className="text-primary font-medium mb-3 transition-transform group-hover:translate-z-5">{member.role}</p>
+        <p className="text-muted-foreground text-sm mb-6 transition-transform">{member.bio}</p>
         
         <div className="flex justify-center gap-3">
           {member.social.linkedin && (
@@ -132,11 +164,8 @@ const TeamSection = () => {
 
   return (
     <section id="team" className="py-20 md:py-32 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[100px] dark:bg-primary/5" />
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-accent/20 rounded-full blur-[100px] dark:bg-accent/5 animate-pulse-soft" />
-      </div>
+      {/* 3D Background */}
+      <ThreeBackground density={80} color="#7c3aed" secondaryColor="#8b5cf6" />
       
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-16">

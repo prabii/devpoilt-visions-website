@@ -1,36 +1,8 @@
 
 import { Code, Cloud, Database, Layout, Zap, Server, Rocket, Star } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
-
-// Define CSS Keyframes for animations
-const styles = `
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes glowPulse {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.2);
-  }
-}
-`;
+import { useState, useRef } from 'react';
+import ThreeBackground from './ThreeBackground';
 
 interface ServiceCardProps { 
   icon: React.ElementType; 
@@ -47,25 +19,54 @@ const ServiceCard = ({
   features,
   delay,
 }: ServiceCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * 8;
+    const rotateX = ((centerY - e.clientY) / (rect.height / 2)) * 8;
+    
+    setRotation({ x: rotateX, y: rotateY });
+  };
+
+  const resetRotation = () => {
+    setRotation({ x: 0, y: 0 });
+  };
+
   return (
     <Card 
+      ref={cardRef}
       className={`relative group neo-glass transition-all duration-500 animate-fade-in overflow-hidden
         bg-white/10 dark:bg-gray-900/10 backdrop-blur-md shadow-lg hover:shadow-xl
         h-full transform hover:-translate-y-2 cursor-pointer
       `}
-      style={{ animationDelay: delay }}
+      style={{ 
+        animationDelay: delay,
+        transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        resetRotation();
+      }}
     >
       <CardContent className="p-6 sm:p-8 flex flex-col h-full">
-        <div className="mb-5 p-3 bg-gradient-to-br from-primary/20 to-accent/10 rounded-xl w-fit">
+        <div className="mb-5 p-3 bg-gradient-to-br from-primary/20 to-accent/10 rounded-xl w-fit transition-all duration-300 group-hover:scale-110 transform-gpu">
           <Icon className="w-6 h-6 text-primary" />
         </div>
         <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{title}</h3>
         <p className="text-muted-foreground mb-4 text-sm">{description}</p>
         
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-4"></div>
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-4 transition-all duration-300 group-hover:via-primary/60"></div>
         <ul className="text-sm text-muted-foreground space-y-1">
           {features.map((feature, index) => (
-            <li key={index} className="flex items-start">
+            <li key={index} className="flex items-start transition-all duration-300 transform group-hover:translate-x-1" style={{ transitionDelay: `${index * 50}ms` }}>
               <span className="text-primary mr-2">•</span>
               <span>{feature}</span>
             </li>
@@ -78,122 +79,20 @@ const ServiceCard = ({
       
       {/* Enhanced hover glow effect */}
       <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-3/4 h-10 bg-primary/30 rounded-full blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
+
+      {/* 3D particles on hover */}
+      {isHovered && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 left-0 w-2 h-2 bg-primary rounded-full animate-float" style={{ animationDelay: '0s' }} />
+            <div className="absolute top-1/4 right-1/4 w-3 h-3 bg-accent rounded-full animate-float" style={{ animationDelay: '0.5s' }} />
+            <div className="absolute bottom-1/3 left-1/2 w-2 h-2 bg-primary rounded-full animate-float" style={{ animationDelay: '1s' }} />
+            <div className="absolute bottom-1/4 right-1/3 w-1 h-1 bg-accent rounded-full animate-float" style={{ animationDelay: '1.5s' }} />
+          </div>
+        </div>
+      )}
     </Card>
   );
-};
-
-const ThreeJSBackground = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    // Set up scene
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000, 0);
-    containerRef.current.appendChild(renderer.domElement);
-    
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0x404040);
-    scene.add(ambientLight);
-    
-    // Add directional light
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(1, 1, 1);
-    scene.add(light);
-
-    // Create particles
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 100;
-    const posArray = new Float32Array(particlesCount * 3);
-    
-    for(let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 10;
-    }
-    
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    
-    // Create material for particles
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.05,
-      color: 0x8B5CF6, // Purple color to match the theme
-      transparent: true,
-      opacity: 0.8,
-      blending: THREE.AdditiveBlending
-    });
-    
-    // Create the particle system
-    const particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particleSystem);
-    
-    // Create a mesh representing company's logo or shape
-    const torusGeometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-    const torusMaterial = new THREE.MeshPhongMaterial({ 
-      color: 0x9b87f5,
-      shininess: 100,
-      transparent: true,
-      opacity: 0.7
-    });
-    const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-    torus.position.set(0, 0, -5);
-    scene.add(torus);
-    
-    // Position camera
-    camera.position.z = 5;
-    
-    // Handle window resize
-    const handleResize = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    };
-    window.addEventListener('resize', handleResize);
-    
-    // Mouse movement effect
-    const mousePosition = new THREE.Vector2();
-    
-    const handleMouseMove = (event: MouseEvent) => {
-      mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    };
-    document.addEventListener('mousemove', handleMouseMove);
-    
-    // Animation loop
-    const animate = () => {
-      requestAnimationFrame(animate);
-      
-      // Rotate the particles system
-      particleSystem.rotation.x += 0.0005;
-      particleSystem.rotation.y += 0.0005;
-      
-      // Move the torus based on mouse position
-      torus.rotation.x += 0.01;
-      torus.rotation.y += 0.01;
-      torus.position.x = mousePosition.x * 0.5;
-      torus.position.y = mousePosition.y * 0.5;
-      
-      renderer.render(scene, camera);
-    };
-    animate();
-    
-    // Clean up
-    return () => {
-      if (containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement);
-      }
-      window.removeEventListener('resize', handleResize);
-      document.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
-  return <div ref={containerRef} className="absolute inset-0 -z-10" />;
 };
 
 const ServicesSection = () => {
@@ -291,7 +190,19 @@ const ServicesSection = () => {
   return (
     <section id="services" className="py-20 md:py-32 relative overflow-hidden">
       {/* 3D Background */}
-      <ThreeJSBackground />
+      <ThreeBackground density={100} speed={0.002} />
+
+      {/* Add style for floating animation */}
+      <style jsx global>{`
+        @keyframes float {
+          0% { transform: translateY(0) translateX(0) rotate(0); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateY(-100px) translateX(20px) rotate(360deg); opacity: 0; }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+      `}</style>
 
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-16">
