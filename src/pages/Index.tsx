@@ -218,7 +218,7 @@ const Index = () => {
               <span className="text-sm font-medium text-primary">{loadingProgress}%</span>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-primary mt-6 animate-pulse">Devpoilt</h2>
+          <h2 className="text-3xl font-bold text-primary mt-6 animate-pulse">Devpilot</h2>
         </div>
       </div>
     );
