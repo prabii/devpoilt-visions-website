@@ -51,7 +51,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
 
   return (
     <div 
-      className={`group relative ${project.featured ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1'}`}
+      className={`group relative ${project.featured ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1 md:row-span-1'}`}
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
@@ -65,7 +65,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
         style={{ 
           animationDelay: `${project.id * 100}ms`,
           transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
-          height: project.featured ? '600px' : '400px'
         }}
       >
         <div className="relative h-full">
@@ -237,9 +236,17 @@ const ProjectsSection = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] lg:auto-rows-[300px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] md:auto-rows-[300px] lg:auto-rows-[350px]">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <div 
+              key={project.id} 
+              className="h-full"
+              style={{ 
+                height: project.featured ? '700px' : '350px' 
+              }}
+            >
+              <ProjectCard project={project} />
+            </div>
           ))}
         </div>
       </div>
