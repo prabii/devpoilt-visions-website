@@ -55,6 +55,8 @@ export const createInteractionHandlers = (
   setIsDragging: (isDragging: boolean) => void,
   setPreviousPosition: (position: { x: number, y: number }) => void
 ) => {
+  let previousPosition = { x: 0, y: 0 };
+
   const handleMouseDown = (e: MouseEvent) => {
     setIsDragging(true);
     setPreviousPosition({
@@ -66,18 +68,22 @@ export const createInteractionHandlers = (
   const handleMouseMove = (e: MouseEvent) => {
     if (!object) return;
     
-    const deltaMove = {
-      x: e.clientX - previousPosition.x,
-      y: e.clientY - previousPosition.y
-    };
-
-    object.rotation.y += deltaMove.x * 0.005;
-    object.rotation.x += deltaMove.y * 0.005;
-
-    setPreviousPosition({
-      x: e.clientX,
-      y: e.clientY
-    });
+    if (setIsDragging) {
+      const deltaMove = {
+        x: e.clientX - previousPosition.x,
+        y: e.clientY - previousPosition.y
+      };
+  
+      if (object) {
+        object.rotation.y += deltaMove.x * 0.005;
+        object.rotation.x += deltaMove.y * 0.005;
+      }
+  
+      setPreviousPosition({
+        x: e.clientX,
+        y: e.clientY
+      });
+    }
   };
 
   const handleMouseUp = () => {
@@ -92,6 +98,9 @@ export const createInteractionHandlers = (
         y: e.touches[0].clientY
       });
     }
+    
+    // Prevent page scrolling when interacting with the 3D object
+    e.preventDefault();
   };
 
   const handleTouchMove = (e: TouchEvent) => {
@@ -117,8 +126,6 @@ export const createInteractionHandlers = (
   const handleTouchEnd = () => {
     setIsDragging(false);
   };
-  
-  let previousPosition = { x: 0, y: 0 };
 
   return {
     handleMouseDown,

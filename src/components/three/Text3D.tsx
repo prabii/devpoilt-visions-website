@@ -1,7 +1,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { setupScene, setupRenderer, handleResize } from '@/utils/threeUtils';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { setupScene, setupRenderer, handleResize, createInteractionHandlers } from '@/utils/threeUtils';
 
 interface Text3DProps {
   text: string;
@@ -48,11 +50,11 @@ const Text3D = ({
     containerRef.current.appendChild(renderer.domElement);
     
     // Create 3D text
-    const loader = new THREE.FontLoader();
+    const loader = new FontLoader();
     
     // Use a remote font
     loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
-      const textGeometry = new THREE.TextGeometry(text, {
+      const textGeometry = new TextGeometry(text, {
         font: font,
         size: size,
         height: height,
@@ -85,76 +87,21 @@ const Text3D = ({
     });
 
     // Add interactivity for mouse controls if enabled
+    let interactionHandlers: ReturnType<typeof createInteractionHandlers> | undefined;
+    
     if (interactive) {
-      const handleMouseDown = (e: MouseEvent) => {
-        setIsDragging(true);
-        setPreviousPosition({
-          x: e.clientX,
-          y: e.clientY
-        });
-      };
-
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!isDragging || !textMeshRef.current) return;
-        
-        const deltaMove = {
-          x: e.clientX - previousPosition.x,
-          y: e.clientY - previousPosition.y
-        };
-
-        textMeshRef.current.rotation.y += deltaMove.x * 0.005;
-        textMeshRef.current.rotation.x += deltaMove.y * 0.005;
-
-        setPreviousPosition({
-          x: e.clientX,
-          y: e.clientY
-        });
-      };
-
-      const handleMouseUp = () => {
-        setIsDragging(false);
-      };
-
-      const handleTouchStart = (e: TouchEvent) => {
-        if (e.touches.length === 1) {
-          setIsDragging(true);
-          setPreviousPosition({
-            x: e.touches[0].clientX,
-            y: e.touches[0].clientY
-          });
-        }
-      };
-
-      const handleTouchMove = (e: TouchEvent) => {
-        if (!isDragging || !textMeshRef.current || e.touches.length !== 1) return;
-        
-        const deltaMove = {
-          x: e.touches[0].clientX - previousPosition.x,
-          y: e.touches[0].clientY - previousPosition.y
-        };
-
-        textMeshRef.current.rotation.y += deltaMove.x * 0.005;
-        textMeshRef.current.rotation.x += deltaMove.y * 0.005;
-
-        setPreviousPosition({
-          x: e.touches[0].clientX,
-          y: e.touches[0].clientY
-        });
-
-        // Prevent page scrolling when interacting with the 3D object
-        e.preventDefault();
-      };
-
-      const handleTouchEnd = () => {
-        setIsDragging(false);
-      };
+      interactionHandlers = createInteractionHandlers(
+        textMeshRef.current,
+        setIsDragging,
+        setPreviousPosition
+      );
       
-      containerRef.current.addEventListener('mousedown', handleMouseDown);
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      containerRef.current.addEventListener('touchstart', handleTouchStart);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', handleTouchEnd);
+      containerRef.current.addEventListener('mousedown', interactionHandlers.handleMouseDown);
+      document.addEventListener('mousemove', interactionHandlers.handleMouseMove);
+      document.addEventListener('mouseup', interactionHandlers.handleMouseUp);
+      containerRef.current.addEventListener('touchstart', interactionHandlers.handleTouchStart, { passive: false });
+      document.addEventListener('touchmove', interactionHandlers.handleTouchMove, { passive: false });
+      document.addEventListener('touchend', interactionHandlers.handleTouchEnd);
     }
 
     // Animation loop
@@ -187,14 +134,14 @@ const Text3D = ({
     
     // Cleanup
     return () => {
-      if (interactive && containerRef.current) {
+      if (interactive && containerRef.current && interactionHandlers) {
         const newContainer = containerRef.current;
-        newContainer.removeEventListener('mousedown', handleMouseDown);
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-        newContainer.removeEventListener('touchstart', handleTouchStart);
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleTouchEnd);
+        newContainer.removeEventListener('mousedown', interactionHandlers.handleMouseDown);
+        document.removeEventListener('mousemove', interactionHandlers.handleMouseMove);
+        document.removeEventListener('mouseup', interactionHandlers.handleMouseUp);
+        newContainer.removeEventListener('touchstart', interactionHandlers.handleTouchStart);
+        document.removeEventListener('touchmove', interactionHandlers.handleTouchMove);
+        document.removeEventListener('touchend', interactionHandlers.handleTouchEnd);
       }
       
       window.removeEventListener('resize', resizeHandler);
