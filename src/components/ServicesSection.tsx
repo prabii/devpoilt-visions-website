@@ -190,7 +190,7 @@ const ServicesSection = () => {
   return (
     <section id="services" className="py-20 md:py-32 relative overflow-hidden">
       {/* 3D Background */}
-      <ThreeBackground density={100} speed={0.002} />
+      <ThreeBackground density={80} color="#7c3aed" secondaryColor="#8b5cf6" />
 
       {/* Add style for floating animation */}
       <style jsx global>{`
