@@ -42,7 +42,7 @@ const ThreeText = ({
     
     // Add directional light
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 1, 1); // Fixed typo: replaced 'sucker1' with 1
+    directionalLight.position.set(1, 1, 1);
     scene.add(directionalLight);
 
     // Create 3D text
@@ -67,9 +67,7 @@ const ThreeText = ({
       const textMaterial = new THREE.MeshPhongMaterial({ 
         color: color,
         specular: 0x111111,
-        shininess: 30,
-        transparent: true,
-        opacity: 0.7 // Slightly reduced opacity for background effect
+        shininess: 30
       });
       
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
@@ -77,14 +75,13 @@ const ThreeText = ({
       textMesh.rotation.set(rotation[0], rotation[1], rotation[2]);
       scene.add(textMesh);
       
-      // Adjust camera position based on text size and screen size
-      const cameraZ = Math.max(5, size * 5);
-      camera.position.z = cameraZ;
+      // Position camera
+      camera.position.z = 5;
 
       // Animation loop
       const animate = () => {
         requestAnimationFrame(animate);
-        textMesh.rotation.y += 0.005; // Slower rotation for subtle effect
+        textMesh.rotation.y += 0.01;
         renderer.render(scene, camera);
       };
       
@@ -95,9 +92,8 @@ const ThreeText = ({
     const handleResize = () => {
       if (!containerRef.current) return;
       const width = containerRef.current.clientWidth;
-      const height = containerHeight;
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
+      renderer.setSize(width, containerHeight);
+      camera.aspect = width / containerHeight;
       camera.updateProjectionMatrix();
     };
     
@@ -109,7 +105,6 @@ const ThreeText = ({
         containerRef.current.removeChild(renderer.domElement);
       }
       window.removeEventListener('resize', handleResize);
-      renderer.dispose();
     };
   }, [text, size, height, color, containerHeight, position, rotation]);
 

@@ -1,32 +1,17 @@
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ThreeText from './ThreeText';
 
 const HeroSection = () => {
   return (
     <section id="hero" className="relative pt-28 pb-20 md:pt-36 md:pb-32 overflow-hidden">
-      {/* Background 3D Text */}
-      <div className="absolute inset-0 -z-20 opacity-30">
-        <ThreeText
-          text="Innovate"
-          size={1}
-          height={0.3}
-          color="#7c3aed"
-          position={[0, 0, 0]}
-          rotation={[0, 0, 0]}
-          containerHeight={window.innerHeight}
-          className="w-full h-full"
-        />
-      </div>
-
-      {/* Background Gradient Elements */}
+      {/* Background Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10" />
         <div className="absolute -top-[30%] -left-[10%] w-[50%] h-[80%] bg-primary/20 rounded-full blur-[100px] dark:bg-primary/10" />
         <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[80%] bg-accent/30 rounded-full blur-[100px] dark:bg-accent/10" />
       </div>
       
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex flex-col items-center text-center">
           {/* Badge */}
           <div className="px-4 py-1.5 mb-6 rounded-full border border-border bg-muted/50 backdrop-blur-sm inline-flex items-center gap-2 animate-fade-in">
