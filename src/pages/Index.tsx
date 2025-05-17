@@ -49,7 +49,8 @@ const Index = () => {
       step++;
       const baseProgress = Math.min(95, Math.floor((step / steps) * 95));
       const resourceProgress = preloaded / totalResources * 5;
-      setLoadingProgress(Math.min(100, baseProgress + resourceProgress));
+      const newProgress = Math.min(100, baseProgress + resourceProgress);
+      setLoadingProgress(newProgress);
       
       if (step >= steps && preloaded >= totalResources) {
         clearInterval(timer);
@@ -280,6 +281,18 @@ const Index = () => {
       window.removeEventListener('resize', resizeCanvas);
     };
   }, [showContent, isMobile]);
+
+  // Reset URL hash if it's not a valid section
+  useEffect(() => {
+    if (showContent) {
+      const hash = window.location.hash;
+      if (hash && !document.querySelector(hash)) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
+  }, [showContent]);
+
+  console.log("Loading state:", { isLoading, loadingProgress, showContent });
 
   if (isLoading) {
     return <LoadingAnimation progress={loadingProgress} onComplete={handleLoadingComplete} />;
