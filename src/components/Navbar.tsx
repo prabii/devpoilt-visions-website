@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -16,9 +16,9 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const toggleMenu = () => {
+  const toggleMenu = useCallback(() => {
     setIsOpen(!isOpen);
-  };
+  }, [isOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,7 +26,8 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
       setScrolled(offset > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Passive event listener for better performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -60,7 +61,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
           ))}
         </div>
 
-        {/* Theme Toggle Only - Contact Number Removed */}
+        {/* Theme Toggle Only */}
         <div className="hidden md:flex items-center">
           <ThemeToggle />
         </div>
@@ -84,23 +85,23 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
           </Button>
         </div>
 
-        {/* Mobile Menu */}
-        <div 
-          className={`fixed inset-0 bg-background/95 backdrop-blur-lg z-40 flex flex-col items-center justify-center space-y-8 transition-all duration-300 ${
-            isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-          }`}
-        >
-          {['Home', 'Services', 'Projects', 'Team', 'Contact'].map((item) => (
-            <a 
-              key={item} 
-              href={`#${item.toLowerCase()}`}
-              className="text-2xl font-medium hover:text-primary transition-colors duration-200"
-              onClick={toggleMenu}
-            >
-              {item}
-            </a>
-          ))}
-        </div>
+        {/* Mobile Menu - Optimized to avoid reflows */}
+        {isOpen && (
+          <div 
+            className="fixed inset-0 bg-background/95 backdrop-blur-lg z-40 flex flex-col items-center justify-center space-y-8"
+          >
+            {['Home', 'Services', 'Projects', 'Team', 'Contact'].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase()}`}
+                className="text-2xl font-medium hover:text-primary transition-colors duration-200"
+                onClick={toggleMenu}
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        )}
       </nav>
     </header>
   );

@@ -1,5 +1,5 @@
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import ServicesSection from '@/components/ServicesSection';
@@ -9,6 +9,45 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import { useMedia } from 'react-use';
+
+// Performance optimization technique - better scrolling
+const useOptimizedScroll = () => {
+  // Implementation to support smooth scrolling
+  useEffect(() => {
+    // Add smooth scrolling for all anchor links
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // Check if the clicked element is an anchor with a hash
+      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const href = target.getAttribute('href') as string;
+        
+        if (href !== '#') {
+          const targetElement = document.querySelector(href);
+          if (targetElement) {
+            // Smooth scroll with optimized animation
+            const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+            const headerOffset = 80; // Account for fixed header
+            const offsetPosition = elementPosition - headerOffset;
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+            
+            // Update URL without page reload
+            window.history.pushState(null, '', href);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    
+    return () => document.removeEventListener('click', handleAnchorClick);
+  }, []);
+};
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,11 +64,13 @@ const Index = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMobile = useMedia('(max-width: 768px)', false);
 
-  // Loading animation
+  // Use optimized scroll hook
+  useOptimizedScroll();
+
+  // More efficient loading animation
   useEffect(() => {
-    // Simulate loading to ensure smooth animations
-    const duration = 2000; // 2 seconds
-    const interval = 20; // Update every 20ms
+    const duration = 1000; // Shorter loading time - 1 second
+    const interval = 20; 
     const steps = duration / interval;
     let step = 0;
 
@@ -42,72 +83,50 @@ const Index = () => {
         setIsLoading(false);
         setTimeout(() => {
           setShowContent(true);
-        }, 100);
+        }, 50); // Reduced transition time
       }
     }, interval);
 
     return () => clearInterval(timer);
   }, []);
 
-  // Implement smooth scrolling
+  // Performance optimized intersection observer
   useEffect(() => {
-    // Add smooth scrolling for all anchor links
-    const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      
-      // Check if the clicked element is an anchor with a hash
-      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
-        e.preventDefault();
-        const href = target.getAttribute('href') as string;
-        
-        if (href !== '#') {
-          const targetElement = document.querySelector(href);
-          if (targetElement) {
-            // Smooth scroll to the target element
-            targetElement.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-            
-            // Update URL without page reload
-            window.history.pushState(null, '', href);
-          }
-        }
-      }
+    if (!showContent) return;
+
+    // Use IntersectionObserver for better performance
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -10% 0px',
+      threshold: 0.1
     };
-
-    // Add event listener to handle anchor clicks
-    document.addEventListener('click', handleAnchorClick);
     
-    // Apply smooth scrolling behavior to html element
-    document.documentElement.style.scrollBehavior = 'smooth';
-
-    // Performance optimizations
-    const sections = document.querySelectorAll('section');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          // Only animate when in view
-          if (entry.isIntersecting) {
+    const handleIntersection: IntersectionObserverCallback = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          requestAnimationFrame(() => {
             entry.target.classList.add('animate-fade-in');
             entry.target.classList.remove('opacity-0');
             entry.target.classList.remove('translate-y-10');
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
-    );
+          });
+        }
+      });
+    };
     
-    sections.forEach(section => observer.observe(section));
+    const observer = new IntersectionObserver(handleIntersection, observerOptions);
+    
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+      section.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-700');
+      observer.observe(section);
+    });
 
     return () => {
-      document.removeEventListener('click', handleAnchorClick);
-      document.documentElement.style.scrollBehavior = '';
       sections.forEach(section => observer.unobserve(section));
     };
   }, [showContent]);
 
-  // 3D background animation effect
+  // Optimized 3D background animation
   useEffect(() => {
     if (!showContent || !canvasRef.current || isMobile) return;
 
@@ -115,18 +134,26 @@ const Index = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas to full screen
+    // Set canvas to full screen with proper device pixel ratio
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const pixelRatio = window.devicePixelRatio || 1;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      canvas.width = width * pixelRatio;
+      canvas.height = height * pixelRatio;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      
+      ctx.scale(pixelRatio, pixelRatio);
     };
     
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', resizeCanvas, { passive: true });
 
-    // Create particles
+    // Reduce particle count for better performance
     const particlesArray: Particle[] = [];
-    const particleCount = 50;
+    const particleCount = 30; // Reduced from 50 to 30
     
     class Particle {
       x: number;
@@ -139,10 +166,10 @@ const Index = () => {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 5 + 1;
-        this.speedX = Math.random() * 3 - 1.5;
-        this.speedY = Math.random() * 3 - 1.5;
-        this.color = `hsla(${Math.random() * 60 + 240}, 70%, 71%, ${Math.random() * 0.2 + 0.1})`;
+        this.size = Math.random() * 3 + 1; // Reduced size
+        this.speedX = Math.random() * 2 - 1; // Slower movement
+        this.speedY = Math.random() * 2 - 1;
+        this.color = `hsla(${Math.random() * 60 + 240}, 70%, 71%, ${Math.random() * 0.15 + 0.05})`; // More transparent
       }
       
       update() {
@@ -150,10 +177,10 @@ const Index = () => {
         this.y += this.speedY;
         
         // Bounce off edges
-        if (this.x > canvas.width || this.x < 0) {
+        if (this.x > window.innerWidth || this.x < 0) {
           this.speedX = -this.speedX;
         }
-        if (this.y > canvas.height || this.y < 0) {
+        if (this.y > window.innerHeight || this.y < 0) {
           this.speedY = -this.speedY;
         }
       }
@@ -173,18 +200,21 @@ const Index = () => {
       }
     };
     
+    // Optimize connection drawing to only draw some connections
     const connectParticles = () => {
       if (!ctx) return;
+      const connectionDistance = 120; // Reduced connection distance
+      
       for (let a = 0; a < particlesArray.length; a++) {
         for (let b = a; b < particlesArray.length; b++) {
           const dx = particlesArray[a].x - particlesArray[b].x;
           const dy = particlesArray[a].y - particlesArray[b].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < 150) {
+          if (distance < connectionDistance) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(123, 97, 255, ${0.2 - (distance/150) * 0.2})`;
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(123, 97, 255, ${0.1 - (distance/connectionDistance) * 0.1})`;
+            ctx.lineWidth = 0.5; // Thinner lines
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
             ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
             ctx.stroke();
@@ -193,9 +223,11 @@ const Index = () => {
       }
     };
     
+    let animationFrameId: number;
+    
     const animate = () => {
       if (!ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
@@ -203,7 +235,7 @@ const Index = () => {
       }
       
       connectParticles();
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
     
     init();
@@ -211,42 +243,9 @@ const Index = () => {
     
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
     };
   }, [showContent, isMobile]);
-
-  // Setup intersection observer for scroll animations
-  useEffect(() => {
-    if (!showContent) return;
-
-    // Function to handle section visibility
-    const handleIntersection: IntersectionObserverCallback = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-fade-in');
-          entry.target.classList.remove('opacity-0');
-          entry.target.classList.remove('translate-y-10');
-        }
-      });
-    };
-
-    // Create observer
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    });
-
-    // Get all sections
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-      section.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-700');
-      observer.observe(section);
-    });
-
-    return () => {
-      sections.forEach(section => observer.unobserve(section));
-    };
-  }, [showContent]);
 
   if (isLoading) {
     return (
@@ -256,7 +255,7 @@ const Index = () => {
             <div className="absolute inset-0 border-4 border-primary/30 rounded-full"></div>
             <div 
               className="absolute inset-0 border-4 border-transparent border-t-primary rounded-full animate-spin"
-              style={{ animationDuration: '1.5s' }}
+              style={{ animationDuration: '1s' }} // Faster spin
             ></div>
             {/* Progress circle */}
             <svg className="absolute inset-0 w-24 h-24 transform -rotate-90">
@@ -284,27 +283,23 @@ const Index = () => {
 
   return (
     <div 
-      className={`min-h-screen relative transition-opacity duration-700 ${showContent ? 'opacity-100' : 'opacity-0'}`}
+      className={`min-h-screen relative transition-opacity duration-500 ${showContent ? 'opacity-100' : 'opacity-0'}`}
       ref={sectionsRef}
     >
-      {/* 3D Background Canvas */}
+      {/* 3D Background Canvas - Only render for non-mobile devices */}
       {!isMobile && (
         <canvas 
           ref={canvasRef} 
-          className="fixed inset-0 -z-30 opacity-60"
+          className="fixed inset-0 -z-30 opacity-50" // Reduced opacity
         />
       )}
       
-      {/* Global site background decoration */}
+      {/* Simplified global site background decoration */}
       <div className="fixed inset-0 -z-20 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent dark:from-primary/10"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
         
-        {/* Abstract geometric shapes */}
-        <div className="absolute top-[20%] left-[5%] w-64 h-64 rounded-full bg-primary/5 dark:bg-primary/10 blur-[120px] animate-pulse-soft"></div>
-        <div className="absolute bottom-[10%] right-[5%] w-80 h-80 rounded-full bg-accent/5 dark:bg-accent/10 blur-[150px] animate-pulse-soft"></div>
-        
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMzZTNlM2UiIGZpbGwtb3BhY2l0eT0iLjAyIiBkPSJNMzUuMzMzIDI4Ljg2N2MzLjI5IDAgNS45Ni0yLjY3IDUuOTYtNS45NiAwLTMuMjktMi42Ny01Ljk2LTUuOTYtNS45NmMtMy4yOSAwLTUuOTYgMi42Ny01Ljk2IDUuOTYgMCAzLjI5IDIuNjcgNS45NiA1Ljk2IDUuOTZ6TS0uMDAyIDUxLjg2N2wuMDAyLS4wMDIuMDAyLjAwMnoiLz48L2c+PC9zdmc+')]"></div>
+        {/* Reduced number of abstract geometric shapes */}
+        <div className="absolute top-[20%] left-[5%] w-64 h-64 rounded-full bg-primary/5 blur-[100px]"></div>
       </div>
       
       <Navbar contactInfo={contactInfo} />

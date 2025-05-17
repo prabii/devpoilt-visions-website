@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+
+import { useState, useRef, memo, useCallback } from 'react';
 import { ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -29,12 +30,13 @@ type Project = {
   techStack: string[];
 };
 
-const ProjectCard = ({ project }: { project: Project }) => {
+// Memoized project card component to prevent unnecessary re-renders
+const ProjectCard = memo(({ project }: { project: Project }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -43,11 +45,11 @@ const ProjectCard = ({ project }: { project: Project }) => {
     const rotateX = ((centerY - e.clientY) / (rect.height / 2)) * 5;
     
     setRotation({ x: rotateX, y: rotateY });
-  };
+  }, []);
 
-  const resetRotation = () => {
+  const resetRotation = useCallback(() => {
     setRotation({ x: 0, y: 0 });
-  };
+  }, []);
 
   return (
     <div 
@@ -61,21 +63,21 @@ const ProjectCard = ({ project }: { project: Project }) => {
       }}
     >
       <Card 
-        className="animate-fade-in overflow-hidden h-full transform transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105"
+        className="h-full transform transition-all duration-500 group-hover:shadow-2xl"
         style={{ 
-          animationDelay: `${project.id * 100}ms`,
           transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
         }}
       >
         <div className="relative h-full">
-          {/* Background image with parallax effect */}
+          {/* Background image with optimized loading */}
           <div 
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-700" 
             style={{ 
               backgroundImage: `url(${project.image})`,
               transform: isHovered ? `translateZ(-20px) scale(1.12)` : 'none',
               opacity: 0.5
             }} 
+            loading="lazy"
           />
           
           {/* Enhanced overlay gradient for better text visibility */}
@@ -113,7 +115,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
             
             <a 
               href="mailto:Devpilottech@gmail.com"
-              className="z-20 flex items-center gap-2 text-white font-semibold transition-all duration-300 group/link opacity-0 group-hover:opacity-100 bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 rounded-full hover:from-blue-600 hover:to-indigo-700 animate-glow"
+              className="z-20 flex items-center gap-2 text-white font-semibold transition-all duration-300 group/link opacity-0 group-hover:opacity-100 bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 rounded-full hover:from-blue-600 hover:to-indigo-700"
             >
               <span>Contact Us for More Details</span>
             </a>
@@ -122,9 +124,12 @@ const ProjectCard = ({ project }: { project: Project }) => {
       </Card>
     </div>
   );
-};
+});
+
+ProjectCard.displayName = 'ProjectCard';
 
 const ProjectsSection = () => {
+  // Optimized projects data with smaller image sizes for faster loading
   const projects: Project[] = [
     {
       id: 0,
@@ -132,7 +137,7 @@ const ProjectsSection = () => {
       category: "Enterprise Solution",
       featured: true,
       description: "A sophisticated analytics platform with AI-powered insights for Fortune 500 company, processing over 10 million data points daily.",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
       link: "https://www.tableau.com/solutions/ai-analytics",
       techStack: ["React", "TensorFlow.js", "AWS", "D3.js"]
     },
@@ -141,7 +146,7 @@ const ProjectsSection = () => {
       title: "NextGen E-commerce Platform",
       category: "Full Stack Development",
       description: "A lightning-fast e-commerce solution with personalized recommendations and seamless payment processing.",
-      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800",
       link: "https://www.bigcommerce.com/",
       techStack: ["Next.js", "MongoDB", "Stripe", "Redux"]
     },
@@ -150,7 +155,7 @@ const ProjectsSection = () => {
       title: "Blockchain Asset Management",
       category: "Distributed Systems",
       description: "Secure, transparent asset management system built on blockchain with real-time transaction verification.",
-      image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=800",
       link: "https://www.chainalysis.com/solutions/asset-management/",
       techStack: ["Solidity", "Ethereum", "Web3.js", "React"]
     },
@@ -159,7 +164,7 @@ const ProjectsSection = () => {
       title: "Interactive Brand Experience",
       category: "UI/UX Design",
       description: "Award-winning interactive website for a luxury brand, resulting in 300% increase in user engagement.",
-      image: "https://images.unsplash.com/photo-1545239351-ef35f43d514b?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1545239351-ef35f43d514b?auto=format&fit=crop&q=80&w=800",
       link: "https://www.burberry.com/",
       techStack: ["Three.js", "GSAP", "React", "Tailwind CSS"]
     },
@@ -168,7 +173,7 @@ const ProjectsSection = () => {
       title: "Cloud-Native Microservices",
       category: "Enterprise Architecture",
       description: "Highly available microservices architecture enabling seamless scaling for a global SaaS platform.",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
       link: "https://www.redhat.com/en/topics/microservices",
       techStack: ["Kubernetes", "Docker", "Node.js", "MongoDB"]
     },
@@ -177,7 +182,7 @@ const ProjectsSection = () => {
       title: "EdTech Learning Platform",
       category: "Education Technology",
       description: "An interactive learning platform with gamified courses, supporting over 50,000 students globally.",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
       link: "https://www.khanacademy.org/",
       techStack: ["React", "Firebase", "TypeScript", "GraphQL"]
     },
@@ -186,7 +191,7 @@ const ProjectsSection = () => {
       title: "Real-Time Chat Application",
       category: "Communication Tool",
       description: "A scalable chat app with real-time messaging, supporting group chats and multimedia sharing.",
-      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=800",
       link: "https://slack.com/",
       techStack: ["React", "Socket.io", "Node.js", "MongoDB"]
     },
@@ -195,7 +200,7 @@ const ProjectsSection = () => {
       title: "Fitness Tracking App",
       category: "Mobile Development",
       description: "A mobile app for tracking workouts, nutrition, and goals with real-time analytics and social sharing.",
-      image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800",
       link: "https://www.myfitnesspal.com/",
       techStack: ["React Native", "Firebase", "Node.js", "Express"]
     }
@@ -205,7 +210,7 @@ const ProjectsSection = () => {
     <section id="projects" className="py-20 md:py-32 relative bg-muted/30 dark:bg-muted/10">
       <style>{styles}</style>
       {/* Background Elements */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[100px]" />
         <div className="absolute bottom-[10%] right-[5%] w-[30%] h-[30%] bg-accent/10 rounded-full blur-[100px] animate-pulse-soft" />
       </div>
@@ -213,15 +218,14 @@ const ProjectsSection = () => {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
           <div>
-            <h2 className="inline-block text-sm font-semibold tracking-wider text-primary uppercase mb-4 animate-fade-in">Our Portfolio</h2>
-            <h3 className="text-3xl md:text-5xl font-bold mb-6 md:mb-0 animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <h2 className="inline-block text-sm font-semibold tracking-wider text-primary uppercase mb-4">Our Portfolio</h2>
+            <h3 className="text-3xl md:text-5xl font-bold mb-6 md:mb-0">
               Transformative <span className="gradient-text">Digital Experiences</span>
             </h3>
           </div>
           <Button 
             variant="outline" 
-            className="border-primary text-primary dark:text-primary-foreground hover:bg-primary/10 animate-fade-in group"
-            style={{ animationDelay: '200ms' }}
+            className="border-primary text-primary dark:text-primary-foreground hover:bg-primary/10 group"
           >
             <span>View All Projects</span>
             <ArrowRight className="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1" />
