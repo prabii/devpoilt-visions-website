@@ -17,7 +17,7 @@ const Index = () => {
   const contactInfo = {
     phone: "+91 6300737911",
     email: "Devpilottech@gmail.com",
-    address: " C9VP+XPR Bhanu Towers, VIP Hills, Jaihind Enclave, Madhapur, Hyderabad, Telangana 500081"
+    address: " C9VP+XPR Bhanu Towers, VIP Hills, Jaihind Enclave, Madhapur, Hyderabad, Telangana 500081"
   };
   
   // Reference for the observer and 3D background
@@ -48,6 +48,64 @@ const Index = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Implement smooth scrolling
+  useEffect(() => {
+    // Add smooth scrolling for all anchor links
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // Check if the clicked element is an anchor with a hash
+      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const href = target.getAttribute('href') as string;
+        
+        if (href !== '#') {
+          const targetElement = document.querySelector(href);
+          if (targetElement) {
+            // Smooth scroll to the target element
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+            
+            // Update URL without page reload
+            window.history.pushState(null, '', href);
+          }
+        }
+      }
+    };
+
+    // Add event listener to handle anchor clicks
+    document.addEventListener('click', handleAnchorClick);
+    
+    // Apply smooth scrolling behavior to html element
+    document.documentElement.style.scrollBehavior = 'smooth';
+
+    // Performance optimizations
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          // Only animate when in view
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            entry.target.classList.remove('opacity-0');
+            entry.target.classList.remove('translate-y-10');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+    );
+    
+    sections.forEach(section => observer.observe(section));
+
+    return () => {
+      document.removeEventListener('click', handleAnchorClick);
+      document.documentElement.style.scrollBehavior = '';
+      sections.forEach(section => observer.unobserve(section));
+    };
+  }, [showContent]);
 
   // 3D background animation effect
   useEffect(() => {

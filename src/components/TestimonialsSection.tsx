@@ -18,29 +18,29 @@ const TestimonialsSection = () => {
   const testimonials: Testimonial[] = [
     {
       id: 0,
-      name: "Sarah Johnson",
-      role: "CTO",
-      company: "TechVista Inc.",
-      quote: "Devpilot transformed our digital presence with their custom landing page. The conversion rate has increased by 45% since the launch, and the AI-driven features have revolutionized how we interact with customers.",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
+      name: "Rajan Anandan",
+      role: "CEO",
+      company: "Sequoia Capital India",
+      quote: "Devpilot transformed our digital ecosystem with their innovative AI solutions. Their team's technical prowess and commitment to excellence have helped us stay ahead in this competitive market.",
+      image: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&q=80&w=400",
       rating: 5
     },
     {
       id: 1,
-      name: "Michael Chen",
-      role: "Founder",
-      company: "InnovateSphere",
-      quote: "The AI solution Devpilot built for us has revolutionized how we approach customer data. Their team's expertise in both AI and user experience design is truly impressive. Worth every penny of our $90,000 investment.",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
+      name: "Priya Sharma",
+      role: "CTO",
+      company: "TechVeda Solutions",
+      quote: "The AI solution Devpilot built for us has revolutionized how we approach customer data. Their expertise in both AI and user experience design is truly impressive. The ROI from this partnership has been exceptional.",
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
       rating: 5
     },
     {
       id: 2,
-      name: "Jessica Rivera",
-      role: "VP of Marketing",
-      company: "GrowthWave",
-      quote: "Working with Devpilot was a game-changer for our company. Their full-stack development capabilities and attention to detail delivered a product that exceeded our expectations and helped us scale to new heights.",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
+      name: "Vikram Mehta",
+      role: "Founder",
+      company: "InnovateIndia",
+      quote: "Working with Devpilot was a game-changer for our startup. Their full-stack development capabilities and attention to detail delivered a product that exceeded our expectations and helped us secure our next round of funding.",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
       rating: 5
     }
   ];
@@ -92,7 +92,7 @@ const TestimonialsSection = () => {
   }, [isAnimating]);
 
   return (
-    <section className="py-20 md:py-32 relative overflow-hidden">
+    <section id="testimonials" className="py-20 md:py-32 relative overflow-hidden">
       {/* 3D Background */}
       <ThreeBackground density={60} color="#8B5CF6" secondaryColor="#EC4899" className="opacity-50" />
 
@@ -103,7 +103,7 @@ const TestimonialsSection = () => {
             What Our <span className="gradient-text">Clients Say</span> About Us
           </h3>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
-            From startups to Fortune 10 companies, our clients trust us to deliver exceptional digital experiences that drive real business results.
+            From startups to enterprise companies, our clients trust us to deliver exceptional digital experiences that drive real business results.
           </p>
         </div>
 

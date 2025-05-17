@@ -60,17 +60,9 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
           ))}
         </div>
 
-        {/* Call to Action + Theme Toggle */}
-        <div className="hidden md:flex items-center space-x-3">
+        {/* Theme Toggle Only - Contact Number Removed */}
+        <div className="hidden md:flex items-center">
           <ThemeToggle />
-          
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="rounded-full"
-          >
-            {contactInfo.phone}
-          </Button>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -108,16 +100,6 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
               {item}
             </a>
           ))}
-          
-          <div className="pt-8 flex flex-col items-center space-y-4">
-            <Button 
-              variant="default" 
-              size="lg" 
-              className="rounded-full w-full sm:w-auto"
-            >
-              {contactInfo.phone}
-            </Button>
-          </div>
         </div>
       </nav>
     </header>
