@@ -1,17 +1,14 @@
 
-import { useEffect, useState, useRef, lazy, Suspense } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
+import ServicesSection from '@/components/ServicesSection';
+import ProjectsSection from '@/components/ProjectsSection';
+import TeamSection from '@/components/TeamSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import ContactSection from '@/components/ContactSection';
+import Footer from '@/components/Footer';
 import { useMedia } from 'react-use';
-import LoadingAnimation from '@/components/LoadingAnimation';
-
-// Lazy load components to improve initial load time
-const ServicesSection = lazy(() => import('@/components/ServicesSection'));
-const ProjectsSection = lazy(() => import('@/components/ProjectsSection'));
-const TeamSection = lazy(() => import('@/components/TeamSection'));
-const TestimonialsSection = lazy(() => import('@/components/TestimonialsSection'));
-const ContactSection = lazy(() => import('@/components/ContactSection'));
-const Footer = lazy(() => import('@/components/Footer'));
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,60 +25,32 @@ const Index = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMobile = useMedia('(max-width: 768px)', false);
 
-  // Loading animation with optimized timing
+  // Loading animation
   useEffect(() => {
-    // Preload critical resources
-    const preloadImages = [
-      // Add paths to critical images if needed
-    ];
-    
-    let preloaded = 0;
-    const totalResources = preloadImages.length || 1;
-    
-    // Simulate resource loading with minimum duration to ensure smooth experience
+    // Simulate loading to ensure smooth animations
     const duration = 2000; // 2 seconds
     const interval = 20; // Update every 20ms
     const steps = duration / interval;
     let step = 0;
-    
-    // Start progress counter
+
     const timer = setInterval(() => {
       step++;
-      const baseProgress = Math.min(95, Math.floor((step / steps) * 95));
-      const resourceProgress = preloaded / totalResources * 5;
-      const newProgress = Math.min(100, baseProgress + resourceProgress);
-      setLoadingProgress(newProgress);
+      setLoadingProgress(Math.min(100, Math.floor((step / steps) * 100)));
       
-      if (step >= steps && preloaded >= totalResources) {
+      if (step >= steps) {
         clearInterval(timer);
-        setLoadingProgress(100);
+        setIsLoading(false);
+        setTimeout(() => {
+          setShowContent(true);
+        }, 100);
       }
     }, interval);
-
-    // Preload images in the background
-    preloadImages.forEach(src => {
-      const img = new Image();
-      img.onload = () => {
-        preloaded++;
-      };
-      img.src = src;
-    });
 
     return () => clearInterval(timer);
   }, []);
 
-  // Handle completion of loading animation
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-    setTimeout(() => {
-      setShowContent(true);
-    }, 100);
-  };
-
-  // Implement optimized smooth scrolling
+  // Implement smooth scrolling
   useEffect(() => {
-    if (!showContent) return;
-    
     // Add smooth scrolling for all anchor links
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -94,45 +63,26 @@ const Index = () => {
         if (href !== '#') {
           const targetElement = document.querySelector(href);
           if (targetElement) {
-            // Use optimized smooth scroll with requestAnimationFrame
-            const startPosition = window.scrollY;
-            const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-            const distance = targetPosition - startPosition;
-            const duration = 800; // ms
-            let startTime: number;
+            // Smooth scroll to the target element
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
             
-            function scrollStep(timestamp: number) {
-              if (!startTime) startTime = timestamp;
-              const elapsed = timestamp - startTime;
-              const progress = Math.min(elapsed / duration, 1);
-              
-              // Easing function for smoother motion
-              const easeInOutCubic = progress < 0.5
-                ? 4 * progress * progress * progress
-                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-              
-              window.scrollTo(0, startPosition + distance * easeInOutCubic);
-              
-              if (progress < 1) {
-                requestAnimationFrame(scrollStep);
-              } else {
-                // Update URL without page reload
-                window.history.pushState(null, '', href);
-              }
-            }
-            
-            requestAnimationFrame(scrollStep);
+            // Update URL without page reload
+            window.history.pushState(null, '', href);
           }
         }
       }
     };
 
-    document.addEventListener('click', handleAnchorClick, { passive: false });
+    // Add event listener to handle anchor clicks
+    document.addEventListener('click', handleAnchorClick);
     
     // Apply smooth scrolling behavior to html element
     document.documentElement.style.scrollBehavior = 'smooth';
 
-    // Performance optimizations with Intersection Observer API
+    // Performance optimizations
     const sections = document.querySelectorAll('section');
     const observer = new IntersectionObserver(
       (entries) => {
@@ -145,16 +95,10 @@ const Index = () => {
           }
         });
       },
-      { 
-        threshold: 0.1,
-        rootMargin: '0px 0px -10% 0px'
-      }
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
     );
     
-    sections.forEach(section => {
-      section.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-700');
-      observer.observe(section);
-    });
+    sections.forEach(section => observer.observe(section));
 
     return () => {
       document.removeEventListener('click', handleAnchorClick);
@@ -163,7 +107,7 @@ const Index = () => {
     };
   }, [showContent]);
 
-  // 3D background animation effect - optimized for performance
+  // 3D background animation effect
   useEffect(() => {
     if (!showContent || !canvasRef.current || isMobile) return;
 
@@ -180,9 +124,9 @@ const Index = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Create particles with optimized rendering
+    // Create particles
     const particlesArray: Particle[] = [];
-    const particleCount = 30; // Reduced count for better performance
+    const particleCount = 50;
     
     class Particle {
       x: number;
@@ -195,10 +139,10 @@ const Index = () => {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1; // Smaller particles
-        this.speedX = Math.random() * 1.5 - 0.75; // Reduced speed
-        this.speedY = Math.random() * 1.5 - 0.75; // Reduced speed
-        this.color = `hsla(${Math.random() * 60 + 240}, 70%, 71%, ${Math.random() * 0.15 + 0.05})`; // Lower opacity
+        this.size = Math.random() * 5 + 1;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+        this.color = `hsla(${Math.random() * 60 + 240}, 70%, 71%, ${Math.random() * 0.2 + 0.1})`;
       }
       
       update() {
@@ -237,10 +181,10 @@ const Index = () => {
           const dy = particlesArray[a].y - particlesArray[b].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < 120) { // Shorter connection distance
+          if (distance < 150) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(123, 97, 255, ${0.15 - (distance/120) * 0.15})`; // Lower opacity
-            ctx.lineWidth = 0.6; // Thinner lines
+            ctx.strokeStyle = `rgba(123, 97, 255, ${0.2 - (distance/150) * 0.2})`;
+            ctx.lineWidth = 1;
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
             ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
             ctx.stroke();
@@ -249,20 +193,8 @@ const Index = () => {
       }
     };
     
-    let animationId: number;
-    let lastTime = 0;
-    const fps = 30; // Target FPS for optimization
-    const fpsInterval = 1000 / fps;
-    
-    const animate = (timestamp: number) => {
-      animationId = requestAnimationFrame(animate);
-      
-      // Throttle rendering for performance
-      const elapsed = timestamp - lastTime;
-      if (elapsed < fpsInterval) return;
-      
-      lastTime = timestamp - (elapsed % fpsInterval);
-      
+    const animate = () => {
+      if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       for (let i = 0; i < particlesArray.length; i++) {
@@ -271,31 +203,83 @@ const Index = () => {
       }
       
       connectParticles();
+      requestAnimationFrame(animate);
     };
     
     init();
-    animationId = requestAnimationFrame(animate);
+    animate();
     
     return () => {
-      cancelAnimationFrame(animationId);
       window.removeEventListener('resize', resizeCanvas);
     };
   }, [showContent, isMobile]);
 
-  // Reset URL hash if it's not a valid section
+  // Setup intersection observer for scroll animations
   useEffect(() => {
-    if (showContent) {
-      const hash = window.location.hash;
-      if (hash && !document.querySelector(hash)) {
-        window.history.replaceState(null, '', window.location.pathname);
-      }
-    }
+    if (!showContent) return;
+
+    // Function to handle section visibility
+    const handleIntersection: IntersectionObserverCallback = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in');
+          entry.target.classList.remove('opacity-0');
+          entry.target.classList.remove('translate-y-10');
+        }
+      });
+    };
+
+    // Create observer
+    const observer = new IntersectionObserver(handleIntersection, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    });
+
+    // Get all sections
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+      section.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-700');
+      observer.observe(section);
+    });
+
+    return () => {
+      sections.forEach(section => observer.unobserve(section));
+    };
   }, [showContent]);
 
-  console.log("Loading state:", { isLoading, loadingProgress, showContent });
-
   if (isLoading) {
-    return <LoadingAnimation progress={loadingProgress} onComplete={handleLoadingComplete} />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-background/90">
+        <div className="flex flex-col items-center">
+          <div className="relative w-24 h-24">
+            <div className="absolute inset-0 border-4 border-primary/30 rounded-full"></div>
+            <div 
+              className="absolute inset-0 border-4 border-transparent border-t-primary rounded-full animate-spin"
+              style={{ animationDuration: '1.5s' }}
+            ></div>
+            {/* Progress circle */}
+            <svg className="absolute inset-0 w-24 h-24 transform -rotate-90">
+              <circle
+                cx="48"
+                cy="48"
+                r="42"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="transparent"
+                className="text-primary"
+                strokeDasharray={`${2 * Math.PI * 42}`}
+                strokeDashoffset={`${2 * Math.PI * 42 * (1 - loadingProgress / 100)}`}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-sm font-medium text-primary">{loadingProgress}%</span>
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-primary mt-6 animate-pulse">Devpilot</h2>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -324,24 +308,13 @@ const Index = () => {
       </div>
       
       <Navbar contactInfo={contactInfo} />
-      
-      {/* Use Suspense for lazy loaded components */}
       <HeroSection />
-      
-      <Suspense fallback={<div className="h-screen flex items-center justify-center"><p>Loading section...</p></div>}>
-        <ServicesSection />
-      </Suspense>
-      
-      <Suspense fallback={<div className="h-screen flex items-center justify-center"><p>Loading portfolio...</p></div>}>
-        <ProjectsSection />
-      </Suspense>
-      
-      <Suspense fallback={<div className="h-screen flex items-center justify-center"><p>Loading section...</p></div>}>
-        <TeamSection />
-        <TestimonialsSection />
-        <ContactSection contactInfo={contactInfo} />
-        <Footer contactInfo={contactInfo} />
-      </Suspense>
+      <ServicesSection />
+      <ProjectsSection />
+      <TeamSection />
+      <TestimonialsSection />
+      <ContactSection contactInfo={contactInfo} />
+      <Footer contactInfo={contactInfo} />
     </div>
   );
 };

@@ -1,11 +1,9 @@
-
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useMedia } from 'react-use';
 
-// CSS for animations - using normal style tag
+// Define CSS Keyframes for Glowing Effect
 const styles = `
 @keyframes glow {
   0% {
@@ -35,11 +33,9 @@ const ProjectCard = ({ project }: { project: Project }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const isMobile = useMedia('(max-width: 768px)', false);
 
-  // Memoize the handler to prevent unnecessary re-renders
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current || isMobile) return;
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -47,11 +43,11 @@ const ProjectCard = ({ project }: { project: Project }) => {
     const rotateX = ((centerY - e.clientY) / (rect.height / 2)) * 5;
     
     setRotation({ x: rotateX, y: rotateY });
-  }, [isMobile]);
+  };
 
-  const resetRotation = useCallback(() => {
+  const resetRotation = () => {
     setRotation({ x: 0, y: 0 });
-  }, []);
+  };
 
   return (
     <div 
@@ -68,16 +64,16 @@ const ProjectCard = ({ project }: { project: Project }) => {
         className="animate-fade-in overflow-hidden h-full transform transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105"
         style={{ 
           animationDelay: `${project.id * 100}ms`,
-          transform: isHovered && !isMobile ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
+          transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
         }}
       >
         <div className="relative h-full">
-          {/* Background image with optimized loading */}
+          {/* Background image with parallax effect */}
           <div 
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
             style={{ 
               backgroundImage: `url(${project.image})`,
-              transform: isHovered && !isMobile ? `translateZ(-20px) scale(1.12)` : 'none',
+              transform: isHovered ? `translateZ(-20px) scale(1.12)` : 'none',
               opacity: 0.5
             }} 
           />
@@ -128,84 +124,83 @@ const ProjectCard = ({ project }: { project: Project }) => {
   );
 };
 
-// Create projects data outside the component to prevent recreation on each render
-const projectsData: Project[] = [
-  {
-    id: 0,
-    title: "AI-Driven Analytics Dashboard",
-    category: "Enterprise Solution",
-    featured: true,
-    description: "A sophisticated analytics platform with AI-powered insights for Fortune 500 company, processing over 10 million data points daily.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
-    link: "https://www.tableau.com/solutions/ai-analytics",
-    techStack: ["React", "TensorFlow.js", "AWS", "D3.js"]
-  },
-  {
-    id: 1,
-    title: "NextGen E-commerce Platform",
-    category: "Full Stack Development",
-    description: "A lightning-fast e-commerce solution with personalized recommendations and seamless payment processing.",
-    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800",
-    link: "https://www.bigcommerce.com/",
-    techStack: ["Next.js", "MongoDB", "Stripe", "Redux"]
-  },
-  {
-    id: 2,
-    title: "Blockchain Asset Management",
-    category: "Distributed Systems",
-    description: "Secure, transparent asset management system built on blockchain with real-time transaction verification.",
-    image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=800",
-    link: "https://www.chainalysis.com/solutions/asset-management/",
-    techStack: ["Solidity", "Ethereum", "Web3.js", "React"]
-  },
-  {
-    id: 3,
-    title: "Interactive Brand Experience",
-    category: "UI/UX Design",
-    description: "Award-winning interactive website for a luxury brand, resulting in 300% increase in user engagement.",
-    image: "https://images.unsplash.com/photo-1545239351-ef35f43d514b?auto=format&fit=crop&q=80&w=800",
-    link: "https://www.burberry.com/",
-    techStack: ["Three.js", "GSAP", "React", "Tailwind CSS"]
-  },
-  {
-    id: 4,
-    title: "Cloud-Native Microservices",
-    category: "Enterprise Architecture",
-    description: "Highly available microservices architecture enabling seamless scaling for a global SaaS platform.",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
-    link: "https://www.redhat.com/en/topics/microservices",
-    techStack: ["Kubernetes", "Docker", "Node.js", "MongoDB"]
-  },
-  {
-    id: 6,
-    title: "EdTech Learning Platform",
-    category: "Education Technology",
-    description: "An interactive learning platform with gamified courses, supporting over 50,000 students globally.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
-    link: "https://www.khanacademy.org/",
-    techStack: ["React", "Firebase", "TypeScript", "GraphQL"]
-  },
-  {
-    id: 7,
-    title: "Real-Time Chat Application",
-    category: "Communication Tool",
-    description: "A scalable chat app with real-time messaging, supporting group chats and multimedia sharing.",
-    image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=800",
-    link: "https://slack.com/",
-    techStack: ["React", "Socket.io", "Node.js", "MongoDB"]
-  },
-  {
-    id: 8,
-    title: "Fitness Tracking App",
-    category: "Mobile Development",
-    description: "A mobile app for tracking workouts, nutrition, and goals with real-time analytics and social sharing.",
-    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800",
-    link: "https://www.myfitnesspal.com/",
-    techStack: ["React Native", "Firebase", "Node.js", "Express"]
-  }
-];
-
 const ProjectsSection = () => {
+  const projects: Project[] = [
+    {
+      id: 0,
+      title: "AI-Driven Analytics Dashboard",
+      category: "Enterprise Solution",
+      featured: true,
+      description: "A sophisticated analytics platform with AI-powered insights for Fortune 500 company, processing over 10 million data points daily.",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80",
+      link: "https://www.tableau.com/solutions/ai-analytics",
+      techStack: ["React", "TensorFlow.js", "AWS", "D3.js"]
+    },
+    {
+      id: 1,
+      title: "NextGen E-commerce Platform",
+      category: "Full Stack Development",
+      description: "A lightning-fast e-commerce solution with personalized recommendations and seamless payment processing.",
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80",
+      link: "https://www.bigcommerce.com/",
+      techStack: ["Next.js", "MongoDB", "Stripe", "Redux"]
+    },
+    {
+      id: 2,
+      title: "Blockchain Asset Management",
+      category: "Distributed Systems",
+      description: "Secure, transparent asset management system built on blockchain with real-time transaction verification.",
+      image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80",
+      link: "https://www.chainalysis.com/solutions/asset-management/",
+      techStack: ["Solidity", "Ethereum", "Web3.js", "React"]
+    },
+    {
+      id: 3,
+      title: "Interactive Brand Experience",
+      category: "UI/UX Design",
+      description: "Award-winning interactive website for a luxury brand, resulting in 300% increase in user engagement.",
+      image: "https://images.unsplash.com/photo-1545239351-ef35f43d514b?auto=format&fit=crop&q=80",
+      link: "https://www.burberry.com/",
+      techStack: ["Three.js", "GSAP", "React", "Tailwind CSS"]
+    },
+    {
+      id: 4,
+      title: "Cloud-Native Microservices",
+      category: "Enterprise Architecture",
+      description: "Highly available microservices architecture enabling seamless scaling for a global SaaS platform.",
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80",
+      link: "https://www.redhat.com/en/topics/microservices",
+      techStack: ["Kubernetes", "Docker", "Node.js", "MongoDB"]
+    },
+    {
+      id: 6,
+      title: "EdTech Learning Platform",
+      category: "Education Technology",
+      description: "An interactive learning platform with gamified courses, supporting over 50,000 students globally.",
+      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
+      link: "https://www.khanacademy.org/",
+      techStack: ["React", "Firebase", "TypeScript", "GraphQL"]
+    },
+    {
+      id: 7,
+      title: "Real-Time Chat Application",
+      category: "Communication Tool",
+      description: "A scalable chat app with real-time messaging, supporting group chats and multimedia sharing.",
+      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80",
+      link: "https://slack.com/",
+      techStack: ["React", "Socket.io", "Node.js", "MongoDB"]
+    },
+    {
+      id: 8,
+      title: "Fitness Tracking App",
+      category: "Mobile Development",
+      description: "A mobile app for tracking workouts, nutrition, and goals with real-time analytics and social sharing.",
+      image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80",
+      link: "https://www.myfitnesspal.com/",
+      techStack: ["React Native", "Firebase", "Node.js", "Express"]
+    }
+  ];
+
   return (
     <section id="projects" className="py-20 md:py-32 relative bg-muted/30 dark:bg-muted/10">
       <style>{styles}</style>
@@ -234,7 +229,7 @@ const ProjectsSection = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] md:auto-rows-[300px] lg:auto-rows-[350px]">
-          {projectsData.map((project) => (
+          {projects.map((project) => (
             <div 
               key={project.id} 
               className="h-full"

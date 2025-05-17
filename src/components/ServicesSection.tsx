@@ -192,9 +192,8 @@ const ServicesSection = () => {
       {/* 3D Background */}
       <ThreeBackground density={80} color="#7c3aed" secondaryColor="#8b5cf6" />
 
-      {/* Fixed the style tag by removing jsx and global attributes */}
-      <style>
-        {`
+      {/* Add style for floating animation */}
+      <style jsx global>{`
         @keyframes float {
           0% { transform: translateY(0) translateX(0) rotate(0); opacity: 0; }
           50% { opacity: 1; }
@@ -203,8 +202,7 @@ const ServicesSection = () => {
         .animate-float {
           animation: float 4s ease-in-out infinite;
         }
-      `}
-      </style>
+      `}</style>
 
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-16">

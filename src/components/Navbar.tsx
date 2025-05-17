@@ -20,22 +20,13 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
     setIsOpen(!isOpen);
   };
 
-  // Optimized scroll handler with throttling
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 20);
-          ticking = false;
-        });
-        ticking = true;
-      }
+      const offset = window.scrollY;
+      setScrolled(offset > 20);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -62,7 +53,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
             <a 
               key={item} 
               href={`#${item.toLowerCase()}`}
-              className="px-3 py-2 text-foreground/90 hover:text-primary transition-colors duration-200 fancy-underline dark:text-foreground/90 dark:hover:text-primary"
+              className="px-3 py-2 text-foreground/80 hover:text-primary transition-colors duration-200 fancy-underline"
             >
               {item}
             </a>
@@ -103,7 +94,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
             <a 
               key={item} 
               href={`#${item.toLowerCase()}`}
-              className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200"
+              className="text-2xl font-medium hover:text-primary transition-colors duration-200"
               onClick={toggleMenu}
             >
               {item}
