@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { ArrowRight, ExternalLink, Star, CheckCircle } from 'lucide-react';
+import { ArrowRight, ExternalLink, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -68,20 +68,21 @@ const ProjectCard = ({ project }: { project: Project }) => {
         }}
       >
         <div className="relative h-full">
-          {/* Background image with parallax effect */}
+          {/* Background image with reduced opacity */}
           <div 
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
             style={{ 
               backgroundImage: `url(${project.image})`,
-              transform: isHovered ? `translateZ(-20px) scale(1.12)` : 'none' 
+              transform: isHovered ? `translateZ(-20px) scale(1.12)` : 'none',
+              opacity: 0.5 // Reduced opacity to make text more visible
             }} 
           />
           
-          {/* Overlay gradient - removed on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-0 pointer-events-none" />
+          {/* Enhanced overlay gradient for better text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/30 opacity-90 transition-opacity duration-300 group-hover:opacity-0 pointer-events-none" />
           
           {/* Content */}
-          <div className="relative z-10 p-6 sm:p-8 flex flex-col justify-end h-full bg-black/20 group-hover:bg-black/0 transition-all duration-300">
+          <div className="relative z-10 p-6 sm:p-8 flex flex-col justify-end h-full bg-black/30 group-hover:bg-black/0 transition-all duration-300">
             {project.featured && (
               <div className="absolute top-6 right-6 flex items-center gap-1 text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <Star className="w-4 h-4 fill-yellow-400" />
@@ -89,25 +90,22 @@ const ProjectCard = ({ project }: { project: Project }) => {
               </div>
             )}
             
-            {/* Done by Us Badge */}
-
-            
-            <span className="text-sm text-primary-foreground bg-primary/90 px-3 py-1 rounded-full w-fit mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="text-sm text-white bg-primary/90 px-3 py-1 rounded-full w-fit mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.category}
             </span>
             
-            <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary-foreground transition-colors opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <h3 className="text-2xl font-bold text-white mb-2 transition-colors opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.title}
             </h3>
             
-            <p className="text-gray-300 mb-5 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <p className="text-white mb-5 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.description}
             </p>
             
             {/* Tech stack */}
             <div className="flex flex-wrap gap-2 mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {project.techStack.map((tech, index) => (
-                <span key={index} className="text-xs bg-white/10 backdrop-blur-md px-2 py-1 rounded-md text-white/80">
+                <span key={index} className="text-xs bg-white/10 backdrop-blur-md px-2 py-1 rounded-md text-white">
                   {tech}
                 </span>
               ))}
