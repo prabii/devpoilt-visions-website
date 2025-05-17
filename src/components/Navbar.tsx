@@ -20,13 +20,22 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
     setIsOpen(!isOpen);
   };
 
+  // Optimized scroll handler with throttling
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
     const handleScroll = () => {
-      const offset = window.scrollY;
-      setScrolled(offset > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
