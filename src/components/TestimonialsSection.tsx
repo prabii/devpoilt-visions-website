@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, MessageSquare, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,6 @@ type Testimonial = {
   role: string;
   company: string;
   quote: string;
-  image: string;
   rating: number;
 };
 
@@ -18,29 +16,26 @@ const TestimonialsSection = () => {
   const testimonials: Testimonial[] = [
     {
       id: 0,
-      name: "Rajan Anandan",
-      role: "CEO",
-      company: "Sequoia Capital India",
-      quote: "Devpilot transformed our digital ecosystem with their innovative AI solutions. Their team's technical prowess and commitment to excellence have helped us stay ahead in this competitive market.",
-      image: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&q=80&w=400",
+      name: "Ravi Prabhu",
+      role: "Famous Telugu Travel YouTuber",
+      company: "Ravi Telugu Traveller",
+      quote: "As a Telugu traveller who has explored 175 countries, I needed a website that could showcase my journey to the world. The team built an amazing website for me, capturing the essence of my travels perfectly. I’m super satisfied with their work—it’s helped me connect with my audience like never before!",
       rating: 5
     },
     {
       id: 1,
-      name: "Priya Sharma",
-      role: "CTO",
-      company: "TechVeda Solutions",
-      quote: "The AI solution Devpilot built for us has revolutionized how we approach customer data. Their expertise in both AI and user experience design is truly impressive. The ROI from this partnership has been exceptional.",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
+      name: "Dev",
+      role: "CEO",
+      company: "IDA India Drone Academy & Drone TV",
+      quote: "Our vision at IDA India Drone Academy and Drone TV needed a strong digital presence. The team not only developed a fantastic website but also handled our digital marketing and created stunning digital posters. I’m truly impressed with their creativity and dedication—our online reach has grown significantly!",
       rating: 5
     },
     {
       id: 2,
-      name: "Vikram Mehta",
-      role: "Founder",
-      company: "InnovateIndia",
-      quote: "Working with Devpilot was a game-changer for our startup. Their full-stack development capabilities and attention to detail delivered a product that exceeded our expectations and helped us secure our next round of funding.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
+      name: "Atchuta Rao",
+      role: "Founder & Chairman",
+      company: "Estah Society",
+      quote: "At Estah Society, we aim to impact millions through sustainability and smart village initiatives. The team developed a website that beautifully reflects our mission of circular economy and ESG goals. Their work has given us a digital platform to inspire change, and I’m very pleased with their professional approach.",
       rating: 5
     }
   ];
@@ -103,14 +98,14 @@ const TestimonialsSection = () => {
             What Our <span className="gradient-text">Clients Say</span> About Us
           </h3>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
-            From startups to enterprise companies, our clients trust us to deliver exceptional digital experiences that drive real business results.
+            From travel influencers to sustainable initiatives, our clients trust us to deliver exceptional digital solutions that amplify their impact.
           </p>
         </div>
 
         <div className="max-w-5xl mx-auto">
           <div 
             ref={testimonialRef}
-            className={`glass-card relative overflow-hidden p-8 md:p-14 transition-all duration-300 ${isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+            className={`glass-card relative overflow-hidden p-8 md:p-14 transition-all duration-300 border border-primary/20 shadow-lg ${isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
             style={{ 
               transform: isHovered ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
             }}
@@ -126,41 +121,22 @@ const TestimonialsSection = () => {
               <MessageSquare className="w-40 h-40 text-primary" />
             </div>
             
-            <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-12 items-center">
-              <div className="flex-shrink-0">
-                <div className="relative">
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-primary/20">
-                    <img 
-                      src={testimonials[currentTestimonial].image} 
-                      alt={testimonials[currentTestimonial].name} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 bg-background rounded-full p-1 border border-border">
-                    <div className="bg-primary/10 backdrop-blur-sm rounded-full p-1">
-                      <MessageSquare className="w-4 h-4 text-primary" />
-                    </div>
-                  </div>
-                </div>
+            <div className="relative z-10 flex flex-col gap-6 items-center">
+              <div className="flex justify-center mb-2">
+                {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                ))}
               </div>
               
-              <div className="flex-grow text-center md:text-left">
-                <div className="flex justify-center md:justify-start mb-2">
-                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  ))}
-                </div>
-                
-                <blockquote className="text-xl md:text-2xl font-medium italic mb-6">
-                  "{testimonials[currentTestimonial].quote}"
-                </blockquote>
-                
-                <div>
-                  <h4 className="font-bold text-lg">{testimonials[currentTestimonial].name}</h4>
-                  <p className="text-primary">
-                    {testimonials[currentTestimonial].role}, {testimonials[currentTestimonial].company}
-                  </p>
-                </div>
+              <blockquote className="text-xl md:text-2xl font-medium italic mb-6 text-center max-w-3xl">
+                "{testimonials[currentTestimonial].quote}"
+              </blockquote>
+              
+              <div className="text-center">
+                <h4 className="font-bold text-lg text-primary">{testimonials[currentTestimonial].name}</h4>
+                <p className="text-muted-foreground">
+                  {testimonials[currentTestimonial].role}, {testimonials[currentTestimonial].company}
+                </p>
               </div>
             </div>
             
@@ -172,17 +148,17 @@ const TestimonialsSection = () => {
               variant="outline" 
               size="icon" 
               onClick={prevTestimonial}
-              className="rounded-full h-10 w-10 border-primary/50 hover:bg-primary/10 hover:text-primary"
+              className="rounded-full h-12 w-12 border-primary/50 hover:bg-primary/10 hover:text-primary"
               disabled={isAnimating}
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-5 w-5" />
             </Button>
             
             <div className="flex items-center gap-2">
               {testimonials.map((_, index) => (
                 <button 
                   key={index} 
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${currentTestimonial === index ? 'bg-primary w-6' : 'bg-primary/30'}`}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${currentTestimonial === index ? 'bg-primary w-8' : 'bg-primary/30'}`}
                   onClick={() => {
                     if (isAnimating) return;
                     setIsAnimating(true);
@@ -199,10 +175,10 @@ const TestimonialsSection = () => {
               variant="outline" 
               size="icon" 
               onClick={nextTestimonial}
-              className="rounded-full h-10 w-10 border-primary/50 hover:bg-primary/10 hover:text-primary"
+              className="rounded-full h-12 w-12 border-primary/50 hover:bg-primary/10 hover:text-primary"
               disabled={isAnimating}
             >
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-5 w-5" />
             </Button>
           </div>
         </div>

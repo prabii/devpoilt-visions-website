@@ -171,7 +171,7 @@ const TeamSection = () => {
         <div className="text-center mb-16">
           <h2 className="inline-block text-sm font-semibold tracking-wider text-primary uppercase mb-4 animate-fade-in">Our Team</h2>
           <h3 className="text-3xl md:text-5xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            Meet the <span className="gradient-text">Visionaries Behind</span> Devpoilt
+            Meet the <span className="gradient-text">Visionaries Behind</span> Devpilot
           </h3>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
             Our elite team combines decades of experience in cloud architecture, artificial intelligence, and cutting-edge development technologies.

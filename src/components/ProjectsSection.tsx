@@ -223,13 +223,6 @@ const ProjectsSection = () => {
               Transformative <span className="gradient-text">Digital Experiences</span>
             </h3>
           </div>
-          <Button 
-            variant="outline" 
-            className="border-primary text-primary dark:text-primary-foreground hover:bg-primary/10 group"
-          >
-            <span>View All Projects</span>
-            <ArrowRight className="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1" />
-          </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] md:auto-rows-[300px] lg:auto-rows-[350px]">
