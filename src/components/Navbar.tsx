@@ -62,7 +62,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
             <a 
               key={item} 
               href={`#${item.toLowerCase()}`}
-              className="px-3 py-2 text-foreground/80 hover:text-primary transition-colors duration-200 fancy-underline"
+              className="px-3 py-2 text-foreground/90 hover:text-primary transition-colors duration-200 fancy-underline dark:text-foreground/90 dark:hover:text-primary"
             >
               {item}
             </a>
@@ -103,7 +103,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
             <a 
               key={item} 
               href={`#${item.toLowerCase()}`}
-              className="text-2xl font-medium hover:text-primary transition-colors duration-200"
+              className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200"
               onClick={toggleMenu}
             >
               {item}

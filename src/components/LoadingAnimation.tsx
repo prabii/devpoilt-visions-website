@@ -34,8 +34,8 @@ const LoadingAnimation = ({ progress, onComplete }: { progress: number, onComple
               <div className="absolute top-4 left-4">
                 <span className="text-green-500 text-xs font-mono typing-text">
                   $ npm start<br />
-                  > devpilot@1.0.0<br />
-                  {"> "}
+                  {'>'}devpilot@1.0.0<br />
+                  {">"}
                   <span className="inline-block animate-pulse">_</span>
                 </span>
               </div>
