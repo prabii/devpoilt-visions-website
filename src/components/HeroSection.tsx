@@ -3,6 +3,20 @@ import { Button } from '@/components/ui/button';
 import ThreeBackground from './ThreeBackground';
 
 const HeroSection = () => {
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="hero" className="relative pt-28 pb-20 md:pt-36 md:pb-32 overflow-hidden">
        <ThreeBackground density={100} speed={0.002} />
@@ -34,10 +48,19 @@ const HeroSection = () => {
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: '300ms' }}>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-6">
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-white px-6"
+              onClick={scrollToContact}
+            >
               Get a Free Quote <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button size="lg" variant="outline" className="border-primary text-primary dark:text-primary-foreground hover:bg-primary/10 px-6">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-primary text-primary dark:text-primary-foreground hover:bg-primary/10 px-6"
+              onClick={scrollToProjects}
+            >
               Explore Projects
             </Button>
           </div>

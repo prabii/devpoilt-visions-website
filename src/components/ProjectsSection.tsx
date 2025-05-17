@@ -1,4 +1,3 @@
-
 import { useState, useRef, memo, useCallback } from 'react';
 import { ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -49,6 +48,13 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
 
   const resetRotation = useCallback(() => {
     setRotation({ x: 0, y: 0 });
+  }, []);
+
+  const scrollToContact = useCallback(() => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
   }, []);
 
   return (
@@ -113,12 +119,12 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
               ))}
             </div>
             
-            <a 
-              href="mailto:Devpilottech@gmail.com"
+            <button 
+              onClick={scrollToContact}
               className="z-20 flex items-center gap-2 text-white font-semibold transition-all duration-300 group/link opacity-0 group-hover:opacity-100 bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 rounded-full hover:from-blue-600 hover:to-indigo-700"
             >
               <span>Contact Us for More Details</span>
-            </a>
+            </button>
           </div>
         </div>
       </Card>
