@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { ArrowRight, ExternalLink, Star } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -68,13 +68,13 @@ const ProjectCard = ({ project }: { project: Project }) => {
         }}
       >
         <div className="relative h-full">
-          {/* Background image with reduced opacity */}
+          {/* Background image with parallax effect */}
           <div 
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
             style={{ 
               backgroundImage: `url(${project.image})`,
               transform: isHovered ? `translateZ(-20px) scale(1.12)` : 'none',
-              opacity: 0.5 // Reduced opacity to make text more visible
+              opacity: 0.5
             }} 
           />
           
@@ -112,13 +112,10 @@ const ProjectCard = ({ project }: { project: Project }) => {
             </div>
             
             <a 
-              href={project.link}
+              href="mailto:Devpilottech@gmail.com"
               className="z-20 flex items-center gap-2 text-white font-semibold transition-all duration-300 group/link opacity-0 group-hover:opacity-100 bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 rounded-full hover:from-blue-600 hover:to-indigo-700 animate-glow"
-              target="_blank"
-              rel="noopener noreferrer"
             >
-              <span>View Project</span>
-              <ExternalLink className="w-4 h-4 transform transition-transform group-hover/link:translate-x-1" />
+              <span>Contact Us for More Details</span>
             </a>
           </div>
         </div>

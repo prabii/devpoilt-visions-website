@@ -21,7 +21,7 @@ const TestimonialsSection = () => {
       name: "Sarah Johnson",
       role: "CTO",
       company: "TechVista Inc.",
-      quote: "Devpoilt transformed our digital presence with their custom landing page. The conversion rate has increased by 45% since the launch, and the AI-driven features have revolutionized how we interact with customers.",
+      quote: "Devpilot transformed our digital presence with their custom landing page. The conversion rate has increased by 45% since the launch, and the AI-driven features have revolutionized how we interact with customers.",
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
       rating: 5
     },
@@ -30,7 +30,7 @@ const TestimonialsSection = () => {
       name: "Michael Chen",
       role: "Founder",
       company: "InnovateSphere",
-      quote: "The AI solution Devpoilt built for us has revolutionized how we approach customer data. Their team's expertise in both AI and user experience design is truly impressive. Worth every penny of our $90,000 investment.",
+      quote: "The AI solution Devpilot built for us has revolutionized how we approach customer data. Their team's expertise in both AI and user experience design is truly impressive. Worth every penny of our $90,000 investment.",
       image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
       rating: 5
     },
@@ -39,7 +39,7 @@ const TestimonialsSection = () => {
       name: "Jessica Rivera",
       role: "VP of Marketing",
       company: "GrowthWave",
-      quote: "Working with Devpoilt was a game-changer for our company. Their full-stack development capabilities and attention to detail delivered a product that exceeded our expectations and helped us scale to new heights.",
+      quote: "Working with Devpilot was a game-changer for our company. Their full-stack development capabilities and attention to detail delivered a product that exceeded our expectations and helped us scale to new heights.",
       image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
       rating: 5
     }
@@ -103,7 +103,7 @@ const TestimonialsSection = () => {
             What Our <span className="gradient-text">Clients Say</span> About Us
           </h3>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
-            From startups to Fortune 500 companies, our clients trust us to deliver exceptional digital experiences that drive real business results.
+            From startups to Fortune 10 companies, our clients trust us to deliver exceptional digital experiences that drive real business results.
           </p>
         </div>
 

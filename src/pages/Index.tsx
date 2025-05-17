@@ -16,8 +16,8 @@ const Index = () => {
   const [showContent, setShowContent] = useState(false);
   const contactInfo = {
     phone: "+91 6300737911",
-    email: "contact@devpoilt.com",
-    address: "Tech Hub, Hyderabad, India"
+    email: "Devpilottech@gmail.com",
+    address: " C9VP+XPR Bhanu Towers, VIP Hills, Jaihind Enclave, Madhapur, Hyderabad, Telangana 500081"
   };
   
   // Reference for the observer and 3D background

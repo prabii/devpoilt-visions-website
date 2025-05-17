@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -29,26 +28,45 @@ const ContactSection = ({ contactInfo }: ContactSectionProps) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      
-      toast({
-        title: "Message Sent Successfully",
-        description: "We'll get back to you within 24 hours!",
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit form');
+      }
+
+      toast({
+        title: 'Message Submitted',
+        description: 'DevPilot team will contact you soon',
+      });
+
+      // Reset form
       setFormData({
         name: '',
         email: '',
         phone: '',
         message: '',
       });
-    }, 1500);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -128,7 +146,7 @@ const ContactSection = ({ contactInfo }: ContactSectionProps) => {
                   <Input
                     id="name"
                     name="name"
-                    placeholder="John Doe"
+                    placeholder="Enter Your Name"
                     value={formData.name}
                     onChange={handleChange}
                     required
@@ -144,7 +162,7 @@ const ContactSection = ({ contactInfo }: ContactSectionProps) => {
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder="Enter Your Email"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -160,7 +178,7 @@ const ContactSection = ({ contactInfo }: ContactSectionProps) => {
                 <Input
                   id="phone"
                   name="phone"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="Enter Your Phone Number"
                   value={formData.phone}
                   onChange={handleChange}
                   className="bg-background/50 border-white/10 backdrop-blur-sm"
@@ -174,7 +192,7 @@ const ContactSection = ({ contactInfo }: ContactSectionProps) => {
                 <Textarea
                   id="message"
                   name="message"
-                  placeholder="Tell us about your project..."
+                  placeholder="Tell us about your project"
                   value={formData.message}
                   onChange={handleChange}
                   required
