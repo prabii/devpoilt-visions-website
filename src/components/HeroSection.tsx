@@ -1,3 +1,4 @@
+
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThreeBackground from './ThreeBackground';
@@ -32,11 +33,11 @@ const HeroSection = () => {
           {/* Badge */}
           <div className="px-4 py-1.5 mb-6 rounded-full border border-border bg-muted/50 backdrop-blur-sm inline-flex items-center gap-2 animate-fade-in">
             <span className="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse-soft" />
-            <span className="text-sm font-medium">Building the future of digital experiences</span>
+            <span className="text-sm font-medium text-foreground">Building the future of digital experiences</span>
           </div>
           
           {/* Main Headline */}
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight max-w-4xl mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight max-w-4xl mb-6 animate-fade-in text-foreground" style={{ animationDelay: '100ms' }}>
             Building the Future of Web with 
             <span className="gradient-text"> AI, Cloud & MERN</span>.
           </h1>
@@ -50,7 +51,7 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: '300ms' }}>
             <Button 
               size="lg" 
-              className="bg-primary hover:bg-primary/90 text-white px-6"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6"
               onClick={scrollToContact}
             >
               Get a Free Quote <ArrowRight className="ml-2 h-4 w-4" />

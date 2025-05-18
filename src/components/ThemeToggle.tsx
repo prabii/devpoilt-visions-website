@@ -43,6 +43,7 @@ const ThemeToggle = () => {
       onClick={toggleTheme}
       disabled={isAnimating}
       className="relative rounded-full w-11 h-11 glass hover:glow transition-all duration-300 overflow-hidden"
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {/* Stars background for dark mode */}
       <div 
