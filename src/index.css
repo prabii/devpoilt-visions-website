@@ -20,7 +20,7 @@
     --secondary-foreground: 210 40% 98%;
 
     --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted-foreground: 240 5% 26%;  /* Darker muted text for better visibility */
 
     --accent: 262 83.3% 67.8%;
     --accent-foreground: 240 5.9% 10%;
@@ -123,8 +123,18 @@
     @apply bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl dark:bg-black/40 dark:border-white/10;
   }
 
+  /* Light mode specific glass card */
+  .light .glass-card, :root:not(.dark) .glass-card {
+    @apply bg-white/90 border-gray-200 shadow-md;
+  }
+
   .neo-glass {
     @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-2xl dark:bg-black/40 dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+  }
+
+  /* Light mode specific neo-glass */
+  .light .neo-glass, :root:not(.dark) .neo-glass {
+    @apply bg-white/95 border-gray-200 shadow-md;
   }
 
   .premium-card {
@@ -132,6 +142,12 @@
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  }
+
+  /* Light mode adjustments for cards */
+  .light .premium-card, :root:not(.dark) .premium-card {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
   }
 
   .premium-card::before {
@@ -144,13 +160,13 @@
     @apply absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent;
   }
 
-  /* Text effects */
+  /* Text effects with light mode improvements */
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500 dark:from-purple-400 dark:to-indigo-300 animate-gradient-shift;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-indigo-600 dark:from-purple-400 dark:to-indigo-300 animate-gradient-shift;
   }
 
   .gradient-text-premium {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-primary via-purple-500 to-indigo-500 dark:from-primary dark:via-purple-400 dark:to-indigo-400 animate-gradient-shift;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-primary via-purple-600 to-indigo-600 dark:from-primary dark:via-purple-400 dark:to-indigo-400 animate-gradient-shift;
   }
 
   .gradient-border {

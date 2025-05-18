@@ -15,9 +15,12 @@ const ThemeToggle = () => {
     if (savedTheme) {
       setTheme(savedTheme);
       document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+      document.documentElement.classList.toggle('light', savedTheme === 'light');
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setTheme('dark');
       document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.add('light');
     }
   }, []);
 
@@ -30,6 +33,7 @@ const ThemeToggle = () => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    document.documentElement.classList.toggle('light', newTheme === 'light');
     
     setTimeout(() => setIsAnimating(false), 600);
   };
@@ -42,7 +46,11 @@ const ThemeToggle = () => {
       size="icon" 
       onClick={toggleTheme}
       disabled={isAnimating}
-      className="relative rounded-full w-11 h-11 glass hover:glow transition-all duration-300 overflow-hidden"
+      className={`relative rounded-full w-11 h-11 transition-all duration-300 overflow-hidden ${
+        theme === 'light' 
+          ? 'bg-blue-50 hover:bg-blue-100 border border-blue-200' 
+          : 'glass hover:glow'
+      }`}
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {/* Stars background for dark mode */}
@@ -74,7 +82,7 @@ const ThemeToggle = () => {
               : 'opacity-0 -rotate-90 scale-50'
           }`}
         >
-          <Sun className="h-5 w-5 text-yellow-400" />
+          <Sun className="h-5 w-5 text-yellow-500" />
           <div className="absolute inset-0 bg-yellow-400/20 rounded-full animate-pulse-soft blur-sm" style={{ animationDuration: '2s' }} />
         </span>
       </div>

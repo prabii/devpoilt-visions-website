@@ -35,7 +35,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
-          ? 'py-3 bg-background/80 backdrop-blur-lg border-b border-border/50 shadow-sm' 
+          ? 'py-3 bg-background/90 backdrop-blur-lg border-b border-border/50 shadow-sm' 
           : 'py-5'
       }`}
     >
@@ -55,7 +55,7 @@ const Navbar = ({ contactInfo }: NavbarProps) => {
             <a 
               key={item} 
               href={`#${item.toLowerCase()}`}
-              className="px-3 py-2 text-foreground hover:text-primary transition-colors duration-200 fancy-underline"
+              className="px-3 py-2 text-foreground font-medium hover:text-primary transition-colors duration-200 fancy-underline"
             >
               {item}
             </a>
