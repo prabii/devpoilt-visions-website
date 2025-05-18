@@ -193,16 +193,18 @@ const ServicesSection = () => {
       <ThreeBackground density={80} color="#7c3aed" secondaryColor="#8b5cf6" />
 
       {/* Add style for floating animation */}
-      <style jsx global>{`
-        @keyframes float {
-          0% { transform: translateY(0) translateX(0) rotate(0); opacity: 0; }
-          50% { opacity: 1; }
-          100% { transform: translateY(-100px) translateX(20px) rotate(360deg); opacity: 0; }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-      `}</style>
+      <style>
+        {`
+          @keyframes float {
+            0% { transform: translateY(0) translateX(0) rotate(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(20px) rotate(360deg); opacity: 0; }
+          }
+          .animate-float {
+            animation: float 4s ease-in-out infinite;
+          }
+        `}
+      </style>
 
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-16">

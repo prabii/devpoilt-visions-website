@@ -83,7 +83,6 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
               transform: isHovered ? `translateZ(-20px) scale(1.12)` : 'none',
               opacity: 0.5
             }} 
-            loading="lazy"
           />
           
           {/* Enhanced overlay gradient for better text visibility */}
